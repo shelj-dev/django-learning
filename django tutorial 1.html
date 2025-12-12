@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Foxtech | Django Basics</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div class="wrap">
+			<header>
+				<div class="brand">
+					<div class="logo">DJ</div>
+					<div>
+						<h1>Foxtech — Django Basics</h1>
+						<div class="sub"></div>
+					</div>
+				</div>
+
+				<nav aria-label="Main navigation">
+					<ul>
+						<li><a href="#">Basics</a></li>
+						<li><a href="#">Basics</a></li>
+						<li><a href="#">Basics</a></li>
+						<li><a href="#">Basics</a></li>
+					</ul>
+				</nav>
+			</header>
+
+			<main>
+				<section>
+					<article class="card">
+						<div class="flex gap" style="justify-content: space-between">
+							<div>
+								<h2 id="getting-started">Getting started</h2>
+								<div class="meta">
+									Install, create project, create app, runserver
+								</div>
+							</div>
+							<!-- <div class="pill">Beginner</div> -->
+						</div>
+
+						<p>
+							Commands to create a Django project and an app (use a virtual
+							environment):
+						</p>
+						<pre><code><span class="code-heading">Terminal</span>
+# create venv (example)
+python -m venv venv
+# source venv/bin/activate   # linux / mac
+venv\Scripts\activate     # windows
+
+# install django
+pip install django
+
+# create project & app
+django-admin startproject mysite
+cd mysite
+python manage.py startapp core
+
+# run development server
+python manage.py runserver
+</code></pre>
+
+						<div>
+							<img class="gallery-img img" src="img/1.png" alt="" />
+						</div>
+
+						<p>Project layout:</p>
+						<pre><code>mysite/
+├─ manage.py
+├─ mysite/        # project settings
+│  ├─ __init__.py
+│  ├─ asgi.py
+│  ├─ settings.py
+│  ├─ urls.py
+│  └─ wsgi.py
+└─ core/          # app
+   ├─ __init__.py
+   ├─ admin.py
+   ├─ apps.py
+   ├─ models.py
+   ├─ tests.py
+   └─ views.py
+</code></pre>
+
+						<hr />
+						<br />
+						<div class="lesson">
+							<div class="bold">HTML Rendering</div>
+							<div class="meta">Renders a template. (Urls, Views)</div>
+							<p>Connect app.</p>
+							<pre><code><div class="code-heading">settings.py</div>
+...
+INSTALLED_APPS = [
+	...
+	core,
+]
+...
+</code></pre>
+
+							<div class="lesson">
+								<h2 id="views-urls-templates">URLs</h2>
+								<div class="meta">Map URLs to views and render templates</div>
+
+								<p>urls.py controls which view runs for each URL in website.</p>
+								<pre><code><div class="code-heading">mysite/urls.py</div>
+# Connect app url with the project.
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('core/', include("core.urls")),
+]
+</code></pre>
+							</div>
+
+							<pre><code><div class="code-heading">core/urls.py</div>
+from django.urls import path
+from core import views
+
+urlpatterns = [
+    path('home/', views.home),
+]
+</code></pre>
+
+							<div class="lesson">
+								<h2 id="views-urls-templates">Views</h2>
+								<div class="meta">
+									A view is simply a Python function or class that receives a
+									request and returns a response.
+								</div>
+
+								<pre><code><div class="code-heading">core/views.py</div>
+from django.shortcuts import render
+
+
+def home(request):
+    return render(request, "home.html")
+</code></pre>
+
+								<div class="lesson">
+									<h2 id="views-urls-templates">Templates</h2>
+									<div class="meta">
+										A template is an HTML file where you can insert dynamic
+										Python data using Django’s template language.
+									</div>
+
+									<pre><code><div class="code-heading">core/templates/home.html</div>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;FoxTech&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+								</div>
+							</div>
+						</div>
+
+						<div>
+							<img class="img gallery-img" src="img/2.png" alt="" />
+							<img class="img gallery-img" src="img/3.png" alt="" />
+						</div>
+
+						<hr />
+
+						<div class="lesson">
+							<h2 id="models">Models</h2>
+							<div class="meta">Define your data (ORM) — migrations</div>
+
+							<p>
+								A model is a Python class that maps to a database table. Django’s
+								ORM (Object-Relational Mapper) converts model instances to rows and
+								fields to columns, so we work in Python instead of raw SQL.
+							</p>
+							<pre><code><div class="code-heading">core/models.py</div>
+from django.db import models
+
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    body = models.TextField()
+</code></pre>
+
+							<p>Make & apply migrations:</p>
+							<pre><code><div class="code-heading">Terminal</div>
+python manage.py makemigrations
+python manage.py migrate
+</code></pre>
+						</div>
+
+						<div>
+							<img class="gallery-img img" src="img/4.png" alt="" />
+						</div>
+
+						<hr />
+						<br />
+						<!-- Get --------------------------------------------------------->
+						<div class="lesson">
+							<h2 id="get-data">Get Data — Read from DB & Requests</h2>
+							<div class="meta">
+								List & detail views, reading <code>request.GET</code>,
+								<code>request.POST</code>, and using <code>name="all_data"</code>
+							</div>
+
+							<p>
+								This lesson shows how to fetch posts from the DB (list & detail),
+								read query params, and read all POST fields (including a single
+								<code>all_data</code> textarea).
+							</p>
+
+							<!-- URLs -->
+							<pre><code><div class="code-heading">core/urls.py</div>
+from django.urls import path
+from core import views
+
+urlpatterns = [
+    path("home/", views.home),
+    path("posts/", views.post_list, name="all_data"),
+]
+</code></pre>
+
+							<!-- views -->
+							<pre><code><div class="code-heading">core/views.py</div>
+def post_list(request):
+    posts = Post.objects.all()
+    return render(request, "core/post_list.html", {"posts": posts})
+</pre></code>
+
+<pre><code><div class="code-heading">core/templates/post_list.html</div>
+&lt;h2&gt;All Posts&lt;/h2&gt;
+
+&lt;ul&gt;
+    {% for post in posts %}
+    &lt;li&gt;&lt;strong&gt;{{ post.title }}&lt;/strong&gt;&lt;/li&gt;
+    &lt;li&gt;{{ post.body }}&lt;/li&gt;
+    &lt;hr&gt;
+    {% empty %}
+    &lt;li&gt;No posts yet&lt;/li&gt;
+    {% endfor %}
+&lt;/ul&gt;
+</code></pre>
+
+							<hr />
+
+						</div>
+
+						<!-- POst form --------------------------------------------------------->
+						<div class="lesson">
+							<h2 id="form-handling">Post Form — Adding Data</h2>
+							<div class="meta">
+								Create a form, validate it, save to the database (Models → Forms →
+								Views → Templates)
+							</div>
+
+							<p>
+								Django provides a powerful <code>forms.py</code> system that helps
+								you build HTML forms, validate input, and save model instances
+								easily.
+							</p>
+
+							<!-- forms.py -->
+							<pre><code><div class="code-heading">core/forms.py</div>
+from django import forms
+from .models import Post
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ["title", "body"]  # fields to render in form
+</code></pre>
+
+							<p>
+								Now create a view to render this form and save data on POST request.
+							</p>
+
+							<!-- views.py -->
+							<pre><code><div class="code-heading">core/views.py</div>
+from django.shortcuts import render, redirect
+from .forms import PostForm
+
+def create_post(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            form.save()          # saves Post(title=..., body=...)
+            return redirect("all_data")
+    else:
+        form = PostForm()
+
+    return render(request, "create_post.html", {"form": form})
+</code></pre>
+
+							<p>Connect your new view to a URL:</p>
+
+							<!-- urls.py -->
+							<pre><code><div class="code-heading">core/urls.py</div>
+from django.urls import path
+from core import views
+
+urlpatterns = [
+    path("home/", views.home),
+	path("posts/", views.post_list, name="all_data"),
+    path("post/new/", views.create_post, name="create_post"),
+]
+</code></pre>
+
+							<p>
+								Create a template to display the form. Django form objects
+								automatically render labels and fields.
+							</p>
+
+							<!-- template -->
+							<pre><code><div class="code-heading">core/templates/create_post.html</div>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Create Post&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;h2&gt;Create new Post&lt;/h2&gt;
+
+    &lt;form method="POST"&gt;
+        {% csrf_token %}
+        
+        {{ form.as_p }}    &lt;!-- renders fields with &lt;p&gt; tags --&gt;
+
+        &lt;button type="submit"&gt;Save&lt;/button&gt;
+    &lt;/form&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+							<p>Now visit:</p>
+							<pre><code>/core/post/new/</code></pre>
+							<div>
+								<img class="gallery-img img" src="img/5.png" alt="" />
+								<img class="gallery-img img" src="img/6.png" alt="" />
+							</div>
+						</div>
+
+						<!-- Cheat sheets ------------------------------------------------------------------------>
+
+						<h2 id="cheatsheet">Cheat sheet</h2>
+						<pre><code><div class="code-heading">Common commands</div>
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+</code></pre>
+
+						<div style="margin-top: 12px; display: flex; gap: 8px">
+							<button class="btn" onclick="window.print()">Print lesson</button>
+						</div>
+					</article>
+				</section>
+
+				<aside>
+					<div class="card">
+						<h3>Contents</h3>
+						<ul class="toc">
+							<li><a href="#">Getting started</a></li>
+						</ul>
+
+						<hr />
+
+						<h4>Exercises</h4>
+						<ol>
+							<li>Create a <code>Book</code> model and add to admin.</li>
+							<li>
+								Make a detail view for the <code>Book</code> model and template.
+							</li>
+							<li>Create a form to add new books and validate it.</li>
+						</ol>
+
+						<hr />
+
+						<h4>Resources</h4>
+						<ul>
+							<li><a href="https://www.djangoproject.com/">
+								Django docs — read the tutorial and refs</a>
+							</li>
+						</ul>
+					</div>
+				</aside>
+			</main>
+
+			<div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+		</div>
+		<script src="scripts.js"></script>
+	</body>
+</html>
