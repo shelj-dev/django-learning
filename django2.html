@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Foxtech | Django Notes</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="brand">
+                <div class="logo">DJ</div>
+                <div>
+                    <h1>Foxtech — Django Basics</h1>
+                    <div class="sub"></div>
+                </div>
+            </div>
+
+            <nav aria-label="Main navigation">
+					<ul>
+						<li><a href="/">Project setup</a></li>
+						<li><a href="/django2.html">Admin, Types and Options</a></li>
+					</ul>
+				</nav>
+        </header>
+
+        <main>
+            <section>
+                <article class="card">
+
+                    <div class="lesson">
+                        <div class="bold">Admin Panel — admin.py & Superuser</div>
+                        <div class="meta">Django Admin • admin.py</div>
+
+                        <p>
+                            Django provides a powerful built-in admin interface that allows you to
+                            manage application data without writing custom dashboards.
+                            The admin panel is configured using the <code>admin.py</code> file.
+                        </p>
+
+                        <pre><code><div class="code-heading">admin.py</div>
+from django.contrib import admin
+from .models import Book
+
+# Register model to make it visible in the admin panel
+admin.site.register(Book)
+</code></pre>
+
+                        <p>
+                            Once a model is registered, it becomes accessible through the Django
+                            admin interface, where you can add, edit, and delete records.
+                        </p>
+
+                        <p><strong>Creating a Superuser</strong></p>
+
+                        <pre><code><div class="code-heading">Terminal</div>
+python manage.py createsuperuser
+</code></pre>
+
+                        <p>
+                            This command creates a <strong>superuser</strong>, which is an
+                            administrator account with full access to the Django project.
+                            You will be prompted to enter:
+                        </p>
+
+                        <ul>
+                            <li>Username</li>
+                            <li>Email address</li>
+                            <li>Password</li>
+                        </ul>
+
+                        <p><strong>What is a Superuser?</strong></p>
+
+                        <p>
+                            A superuser is a special Django user who has all permissions enabled by default.
+                            Superusers can:
+                        </p>
+
+                        <ul>
+                            <li>Access the admin panel (<code>/admin/</code>)</li>
+                            <li>Add, edit, and delete any model data</li>
+                            <li>Create and manage other users</li>
+                            <li>Assign permissions and groups</li>
+                            <li>Bypass object-level permission restrictions</li>
+                        </ul>
+
+                        <p>
+                            The admin panel can be accessed by visiting:
+                            <code>http://127.0.0.1:8000/admin/</code>
+                            and logging in with the superuser credentials.
+                        </p>
+
+                        <p>
+                            <strong>Tip:</strong>
+                            Only trusted users should be granted superuser access,
+                            as it provides complete control over the application.
+                        </p>
+                        <div>
+                            <img class="img gallery-img" src="img/7.png" alt="" />
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Models  -->
+
+                    <div class="lesson">
+                        <div class="bold">Models — Field Types</div>
+                        <div class="meta">Django ORM • models.py</div>
+
+                        <p>
+                            Django models define the structure of your database tables.
+                            Each model class represents a table, and each field represents a column.
+                            Django provides many built-in field types to handle different kinds of data.
+                        </p>
+
+                        <pre><code><div class="code-heading">models.py</div>
+from django.db import models
+
+class Book(models.Model):
+    # Text-based fields
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+
+    # Numeric fields
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    pages = models.IntegerField()
+
+    # Date and time fields
+    published_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Boolean field
+    is_published = models.BooleanField(default=True)
+
+    # File and image fields
+    cover = models.ImageField(upload_to='covers/', blank=True, null=True)
+
+    # Relationship fields
+    author = models.ForeignKey(
+        'Author',
+        on_delete=models.CASCADE,
+        related_name='books'
+    )
+
+    def __str__(self):
+        return self.title
+</code></pre>
+
+                        <p>
+                            <strong>Common Django Model Field Types:</strong>
+                        </p>
+
+                        <ul>
+                            <li><code>CharField</code> – short text, requires <code>max_length</code></li>
+                            <li><code>TextField</code> – long text</li>
+                            <li><code>IntegerField</code> – whole numbers</li>
+                            <li><code>DecimalField</code> – precise decimal values (money)</li>
+                            <li><code>DateField</code> – dates only</li>
+                            <li><code>DateTimeField</code> – date and time</li>
+                            <li><code>BooleanField</code> – true / false</li>
+                            <li><code>ImageField</code> – images (requires Pillow)</li>
+                            <li><code>ForeignKey</code> – many-to-one relationship</li>
+                            <li><code>ManyToManyField</code> – many-to-many relationship</li>
+                            <li><code>OneToOneField</code> – one-to-one relationship</li>
+                        </ul>
+
+                        <p>
+                            After creating or modifying models, always run:
+                            <code>python manage.py makemigrations</code> and
+                            <code>python manage.py migrate</code>.
+                        </p>
+                    </div>
+
+                    <hr>
+                    <!-- Blank fields -->
+                    <div class="lesson">
+                        <div class="bold">Models — Field Options</div>
+                        <div class="meta">Django ORM • models.py</div>
+
+                        <p>
+                            Django model fields support many options that control database behavior,
+                            validation, and form handling. These options are passed as arguments
+                            when defining a field.
+                        </p>
+
+                        <pre><code><div class="code-heading">models.py</div>
+from django.db import models
+
+class Book(models.Model):
+    title = models.CharField(
+        max_length=200,
+        null=False,
+        blank=False
+    )
+
+    summary = models.TextField(
+        blank=True
+    )
+
+    price = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        default=0.00
+    )
+
+    STATUS_CHOICES = [
+        ('draft', 'Draft'),
+        ('published', 'Published'),
+    ]
+
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='draft'
+    )
+
+    published_date = models.DateField(
+        null=True,
+        blank=True
+    )
+</code></pre>
+
+                        <p><strong>Common Model Field Options:</strong></p>
+
+                        <ul>
+                            <li>
+                                <code>null</code> – If <code>True</code>, stores <code>NULL</code> in the database
+                            </li>
+                            <li>
+                                <code>blank</code> – If <code>True</code>, field is optional in forms
+                            </li>
+                            <li>
+                                <code>default</code> – Sets a default value for the field
+                            </li>
+                            <li>
+                                <code>choices</code> – Limits values to predefined options
+                            </li>
+                            <li>
+                                <code>unique</code> – Ensures all values are unique
+                            </li>
+                            <li>
+                                <code>db_index</code> – Adds a database index for faster queries
+                            </li>
+                            <li>
+                                <code>help_text</code> – Displays guidance text in forms and admin
+                            </li>
+                        </ul>
+
+                        <p>
+                            <strong>Important note:</strong>
+                            Use <code>blank=True</code> for form validation and
+                            <code>null=True</code> for database storage — they serve different purposes.
+                        </p>
+
+                        <p>
+                            After changing field options, remember to run migrations to apply changes
+                            to the database schema.
+                        </p>
+                    </div>
+
+                    <hr>
+                    <!-- --------------------------------------- -->
+
+
+                    <div style="margin-top: 12px; display: flex; gap: 8px">
+                        <button class="btn" onclick="window.print()">Print lesson</button>
+                    </div>
+                </article>
+            </section>
+
+            <aside>
+                <div class="card">
+                    <h3>Contents</h3>
+                    <ul class="toc">
+                        <li><a href="#">Getting started</a></li>
+                    </ul>
+
+                    <hr />
+
+                    <h4>Exercises</h4>
+                    <ol>
+                        <li>Create a <code>Book</code> model and add to admin.</li>
+                        <li>
+                            Make a detail view for the <code>Book</code> model and template.
+                        </li>
+                        <li>Create a form to add new books and validate it.</li>
+                    </ol>
+
+                    <hr />
+
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://www.djangoproject.com/">
+                                Django docs — read the tutorial and refs</a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </main>
+
+        <div id="lightbox">
+            <span id="close">&times;</span>
+            <img id="lightbox-img" />
+            <div id="prev" class="nav">&#10094;</div>
+            <div id="next" class="nav">&#10095;</div>
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+
+</html>

@@ -19,10 +19,8 @@
 
 				<nav aria-label="Main navigation">
 					<ul>
-						<li><a href="#">Basics</a></li>
-						<li><a href="#">Basics</a></li>
-						<li><a href="#">Basics</a></li>
-						<li><a href="#">Basics</a></li>
+						<li><a href="/">Project setup</a></li>
+						<li><a href="/django2.html">Admin, Types and Options</a></li>
 					</ul>
 				</nav>
 			</header>
@@ -66,7 +64,7 @@ python manage.py runserver
 							<img class="gallery-img img" src="img/1.png" alt="" />
 						</div>
 
-						<p>Project layout:</p>
+						<p id="project-layout">Project layout:</p>
 						<pre><code>mysite/
 ├─ manage.py
 ├─ mysite/        # project settings
@@ -87,7 +85,7 @@ python manage.py runserver
 						<hr />
 						<br />
 						<div class="lesson">
-							<div class="bold">HTML Rendering</div>
+							<div class="bold" id="html-rendering">HTML Rendering</div>
 							<div class="meta">Renders a template. (Urls, Views)</div>
 							<p>Connect app.</p>
 							<pre><code><div class="code-heading">settings.py</div>
@@ -369,21 +367,20 @@ python manage.py runserver
 					<div class="card">
 						<h3>Contents</h3>
 						<ul class="toc">
-							<li><a href="#">Getting started</a></li>
+							<li><a href="#getting-started">Getting started</a></li>
+							<li><a href="#project-layout">Project layout</a></li>
+							<li><a href="#html-rendering">HTML rendering</a></li>
 						</ul>
 
-						<hr />
 
-						<h4>Exercises</h4>
+						<!-- <h4>Exercises</h4>
 						<ol>
 							<li>Create a <code>Book</code> model and add to admin.</li>
 							<li>
 								Make a detail view for the <code>Book</code> model and template.
 							</li>
 							<li>Create a form to add new books and validate it.</li>
-						</ol>
-
-						<hr />
+						</ol> -->
 
 						<h4>Resources</h4>
 						<ul>

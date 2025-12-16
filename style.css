@@ -1,5 +1,5 @@
 :root {
-	--bg: #0b377e;
+	--bg: linear-gradient(to right, #0f0c29, #302b63, #24243e);
 	--card: #00297a;
 	--muted: #9aa4b2;
 	--accent: #06b6d4;
