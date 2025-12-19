@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Foxtech | Django Getting Started</title>
+		<link rel="stylesheet" href="assests/style.css" />
+	</head>
+
+	<body>
+		<div class="wrap">
+			<header>
+				<div class="brand">
+					<div class="logo"><img src="assests/logo.ico" alt="Logo" /></div>
+					<div>
+						<h1>Foxtech — Django Basics</h1>
+						<div class="sub"></div>
+					</div>
+				</div>
+
+				<nav aria-label="Main navigation">
+					<ul>
+						<li><a href="/index.html">Home</a></li>
+					</ul>
+				</nav>
+			</header>
+
+			<main>
+				<section>
+					<article class="card">
+						<div class="flex gap" style="justify-content: space-between">
+							<div>
+								<h2 id="getting-started">Getting started</h2>
+								<div class="meta">
+									<!-- Install, create project, create app, runserver -->
+								</div>
+							</div>
+							<!-- <div class="pill">Beginner</div> -->
+						</div>
+
+						<p>Commands to create a Django project using virtual environment:</p>
+						<pre><code><span class="code-heading">Terminal</span>
+# create venv (example)
+python -m venv venv
+
+# Virtual environment run command
+# source venv/bin/activate             # linux / mac
+venv\Scripts\activate                  # windows
+
+# install django
+pip install django
+
+# create project
+django-admin startproject mysite
+cd mysite
+
+# run development server
+python manage.py runserver
+</code></pre>
+
+						<div>
+							<img class="gallery-img img" src="img/1.png" alt="" />
+						</div>
+
+						<h3>Create app</h3>
+						<p>Where the project files and logic lives.</p>
+
+						<pre><code><span class="code-heading">Terminal</span>
+python manage.py startapp core
+</code></pre>
+						<p id="project-layout">Project layout:</p>
+						<pre><code>mysite/
+├─ manage.py
+├─ mysite/                # project settings
+│  ├─ __init__.py
+│  ├─ asgi.py
+│  ├─ settings.py
+│  ├─ urls.py
+│  └─ wsgi.py
+└─ core/          # app
+   ├─ __init__.py
+   ├─ admin.py
+   ├─ apps.py
+   ├─ models.py
+   ├─ tests.py
+   └─ views.py
+</code></pre>
+
+						<hr />
+						<br />
+						<!-- Cheat sheets ------------------------------------------------------------------------>
+
+						<h2 id="cheatsheet">Cheat sheet</h2>
+						<pre><code><div class="code-heading">Common commands</div>
+# Activate virtual environments
+venv/scripts/activate
+
+# Change Directory
+cd FOLDER_NAME
+
+# Run server
+python manage.py runserver
+</code></pre>
+
+						<div style="margin-top: 12px; display: flex; gap: 8px">
+							<button class="btn" onclick="window.print()">Print lesson</button>
+						</div>
+					</article>
+				</section>
+
+				<aside>
+					<div class="card">
+						<h3>Contents</h3>
+						<ul class="toc">
+							<li><a href="#getting-started">Getting started</a></li>
+							<li><a href="#project-layout">Project layout</a></li>
+						</ul>
+
+						<h4>Task</h4>
+						<ul>
+							<li>Kill Terminal and try restarting project</li>
+						</ul>
+					</div>
+				</aside>
+			</main>
+
+			<div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+		</div>
+		<script src="assests/scripts.js"></script>
+	</body>
+</html>
