@@ -9,21 +9,7 @@
 
 	<body>
 		<div class="wrap">
-			<header>
-				<div class="brand">
-					<div class="logo"><img src="assests/logo.ico" alt="Logo" /></div>
-					<div>
-						<h1>Foxtech — Django Basics</h1>
-						<div class="sub"></div>
-					</div>
-				</div>
-
-				<nav aria-label="Main navigation">
-					<ul>
-						<li><a href="/django-learning/index.html">Home</a></li>
-					</ul>
-				</nav>
-			</header>
+			<header id="header"></header>
 
 			<main>
 				<section>
@@ -51,12 +37,22 @@ venv\Scripts\activate                  # windows
 pip install django
 
 # create project
-django-admin startproject mysite
-cd mysite
+django-admin startproject myproject
+cd myproject
 
 # run development server
 python manage.py runserver
 </code></pre>
+
+						<p class="danger">
+							Windows sets the PowerShell Execution Policy to Restricted by default
+							for security, preventing any scripts from running. To resolve this, you
+							can change the policy temporarily for one session or permanently for
+							your user account.
+						</p>
+
+						<pre><code><span class="code-heading">Terminal</span>
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code></pre>
 
 						<div>
 							<img class="gallery-img img" src="img/1.png" alt="" />
@@ -66,18 +62,18 @@ python manage.py runserver
 						<p>Where the project files and logic lives.</p>
 
 						<pre><code><span class="code-heading">Terminal</span>
-python manage.py startapp core
+python manage.py startapp myapp
 </code></pre>
 						<p id="project-layout">Project layout:</p>
-						<pre><code>mysite/
+						<pre><code>myproject/
 ├─ manage.py
-├─ mysite/                # project settings
+├─ myproject/                # project settings
 │  ├─ __init__.py
 │  ├─ asgi.py
 │  ├─ settings.py
 │  ├─ urls.py
 │  └─ wsgi.py
-└─ core/          # app
+└─ myapp/          # app
    ├─ __init__.py
    ├─ admin.py
    ├─ apps.py

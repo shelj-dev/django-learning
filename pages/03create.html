@@ -9,21 +9,7 @@
 
 	<body>
 		<div class="wrap">
-			<header>
-				<div class="brand">
-					<div class="logo"><img src="assests/logo.ico" alt="Logo" /></div>
-					<div>
-						<h1>Foxtech</h1>
-						<div class="sub"></div>
-					</div>
-				</div>
-
-				<nav aria-label="Main navigation">
-					<ul>
-						<li><a href="/django-learning/index.html">Home</a></li>
-					</ul>
-				</nav>
-			</header>
+			<header id="header"></header>
 
 			<main>
 				<section>
@@ -37,12 +23,12 @@
 								ORM (Object-Relational Mapper) converts model instances to rows and
 								fields to columns, so we work in Python instead of raw SQL.
 							</p>
-							<pre><code><div class="code-heading">core/models.py</div>
+							<pre><code><div class="code-heading">myapp/models.py</div>
 from django.db import models
 
-class Post(models.Model):
-    title = models.CharField(max_length=200)
-    body = models.TextField()
+class Student(models.Model):
+    name = models.CharField(max_length=200)
+    about = models.TextField()
 </code></pre>
 
 							<p>Make & apply migrations:</p>
@@ -80,9 +66,9 @@ python manage.py createsuperuser
 								<br />
 								<img class="img gallery-img" src="img/9.png" alt="" />
 								<img class="img gallery-img" src="img/10.png" alt="" />
-								<pre><code><div class="code-heading">core/admin.py</div>
+								<pre><code><div class="code-heading">myapp/admin.py</div>
 from django.contrib import admin
-from core.models import Post
+from myapp.models import Post
 
 admin.site.register(Post)
 </code></pre>
@@ -106,9 +92,9 @@ admin.site.register(Post)
 							</p>
 
 							<!-- URLs -->
-							<pre><code><div class="code-heading">core/urls.py</div>
+							<pre><code><div class="code-heading">myapp/urls.py</div>
 from django.urls import path
-from core import views
+from myapp import views
 
 urlpatterns = [
     path("home/", views.home),
@@ -117,13 +103,13 @@ urlpatterns = [
 </code></pre>
 
 							<!-- views -->
-							<pre><code><div class="code-heading">core/views.py</div>
+							<pre><code><div class="code-heading">myapp/views.py</div>
 def post_list(request):
     posts = Post.objects.all()
-    return render(request, "core/post_list.html", {"posts": posts})
+    return render(request, "myapp/post_list.html", {"posts": posts})
 </code></pre>
 
-							<pre><code><div class="code-heading">core/templates/post_list.html</div>
+							<pre><code><div class="code-heading">myapp/templates/post_list.html</div>
 &lt;h2&gt;All Posts&lt;/h2&gt;  
 
 &lt;ul&gt;
@@ -155,7 +141,7 @@ def post_list(request):
 							</p>
 
 							<!-- forms.py -->
-							<pre><code><div class="code-heading">core/forms.py</div>
+							<pre><code><div class="code-heading">myapp/forms.py</div>
 from django import forms
 from .models import Post
 
@@ -170,7 +156,7 @@ class PostForm(forms.ModelForm):
 							</p>
 
 							<!-- views.py -->
-							<pre><code><div class="code-heading">core/views.py</div>
+							<pre><code><div class="code-heading">myapp/views.py</div>
 from django.shortcuts import render, redirect
 from .forms import PostForm
 
@@ -189,9 +175,9 @@ def create_post(request):
 							<p>Connect your new view to a URL:</p>
 
 							<!-- urls.py -->
-							<pre><code><div class="code-heading">core/urls.py</div>
+							<pre><code><div class="code-heading">myapp/urls.py</div>
 from django.urls import path
-from core import views
+from myapp import views
 
 urlpatterns = [
     path("home/", views.home),
@@ -206,7 +192,7 @@ urlpatterns = [
 							</p>
 
 							<!-- template -->
-							<pre><code><div class="code-heading">core/templates/create_post.html</div>
+							<pre><code><div class="code-heading">myapp/templates/create_post.html</div>
 &lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
@@ -231,7 +217,7 @@ urlpatterns = [
 </code></pre>
 
 							<p>Now visit:</p>
-							<pre><code>/core/post/new/</code></pre>
+							<pre><code>/myapp/post/new/</code></pre>
 							<div>
 								<img class="gallery-img img" src="img/5.png" alt="" />
 								<img class="gallery-img img" src="img/6.png" alt="" />

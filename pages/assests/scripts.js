@@ -42,3 +42,20 @@ document.addEventListener("keyup", (e) => {
 	}
 });
 // --------------------------------------------------------------
+// Navbar
+const headerData = `<div class="brand">
+					<div class="logo"><img src="assests/logo.ico" alt="Logo" /></div>
+					<div>
+						<h1>Foxtech</h1>
+						<div class="sub"></div>
+					</div>
+				</div>
+
+				<nav aria-label="Main navigation">
+					<ul>
+						<li><a href="/django-learning/index.html">Home</a></li>
+					</ul>
+				</nav>`
+const header = document.getElementById("header");
+
+header.innerHTML = headerData;

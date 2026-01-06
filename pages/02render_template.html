@@ -9,21 +9,7 @@
 
 	<body>
 		<div class="wrap">
-			<header>
-				<div class="brand">
-					<div class="logo"><img src="assests/logo.ico" alt="Logo" /></div>
-					<div>
-						<h1>Foxtech</h1>
-						<div class="sub"></div>
-					</div>
-				</div>
-
-				<nav aria-label="Main navigation">
-					<ul>
-						<li><a href="/django-learning/index.html">Home</a></li>
-					</ul>
-				</nav>
-			</header>
+			<header id="header"></header>
 
 			<main>
 				<section>
@@ -36,7 +22,7 @@
 ...
 INSTALLED_APPS = [
 	...
-	'core',
+	'myapp',
 ]
 ...
 </code></pre>
@@ -47,7 +33,7 @@ INSTALLED_APPS = [
 								<div class="meta">Map URLs to views and render templates</div>
 
 								<p>urls.py controls which view runs for each URL in website.</p>
-								<pre><code><div class="code-heading">mysite/urls.py</div>
+								<pre><code><div class="code-heading">myproject/urls.py</div>
 # Connect app url with the project.
 
 from django.contrib import admin
@@ -55,14 +41,14 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('core/', include("core.urls")),
+    path('myapp/', include("myapp.urls")),
 ]
 </code></pre>
 							</div>
 
-							<pre><code><div class="code-heading">core/urls.py</div>
+							<pre><code><div class="code-heading">myapp/urls.py</div>
 from django.urls import path
-from core import views
+from myapp import views
 
 urlpatterns = [
     path('home/', views.home),
@@ -78,7 +64,7 @@ urlpatterns = [
 									request and returns a response.
 								</div>
 
-								<pre><code><div class="code-heading">core/views.py</div>
+								<pre><code><div class="code-heading">myapp/views.py</div>
 from django.shortcuts import render
 
 
@@ -93,7 +79,7 @@ def home(request):
 										Python data using Django’s template language.
 									</div>
 
-									<pre><code><div class="code-heading">core/templates/home.html</div>
+									<pre><code><div class="code-heading">myapp/templates/home.html</div>
 &lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
@@ -106,6 +92,10 @@ def home(request):
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
+
+<pre><code><span class="code-heading">Terminal</span>
+python manage.py runserver</code></pre>
+
 								</div>
 							</div>
 						</div>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Foxtech | Django Image Upload</title>
+		<link rel="stylesheet" href="assests/style.css" />
+	</head>
+
+	<body>
+		<div class="wrap">
+			<header id="header"></header>
+
+			<main>
+				<section>
+					<article class="card">
+						<!-- Lesson --------------------------------------------------------->
+						<div class="lesson">
+							<h2 id="image-upload">Image Upload & Display (ImageField)</h2>
+							<div class="meta">
+								Upload images using ImageField and render them in HTML templates
+							</div>
+
+							<p>
+								Django provides <code>ImageField</code> to store and handle image
+								files. This lesson shows how to upload an image and display it on a
+								webpage.
+							</p>
+
+							<h3>Step 1: Install Pillow</h3>
+							<p><code>ImageField</code> requires the Pillow library.</p>
+
+							<pre><code><div class="code-heading">Terminal</div>
+pip install pillow
+</code></pre>
+
+							<h3>Step 2: Model with ImageField</h3>
+
+							<pre><code><div class="code-heading">core/models.py</div>
+from django.db import models
+
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to="posts/")
+
+    def __str__(self):
+        return self.title
+</code></pre>
+
+							<h3>Step 3: Media settings</h3>
+
+							<pre><code><div class="code-heading">settings.py</div>
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+</code></pre>
+
+							<pre><code><div class="code-heading">project/urls.py</div>
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    # your urls
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+</code></pre>
+
+							<h3>Step 4: Form</h3>
+
+							<pre><code><div class="code-heading">core/forms.py</div>
+from django import forms
+from .models import Post
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ["title", "image"]
+</code></pre>
+
+							<h3>Step 5: View</h3>
+
+							<pre><code><div class="code-heading">core/views.py</div>
+from django.shortcuts import render, redirect
+from .forms import PostForm
+from .models import Post
+
+def create_post(request):
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("post_list")
+    else:
+        form = PostForm()
+
+    return render(request, "create_post.html", {"form": form})
+
+def post_list(request):
+    posts = Post.objects.all()
+    return render(request, "post_list.html", {"posts": posts})
+</code></pre>
+
+							<h3>Step 6: URLs</h3>
+
+							<pre><code><div class="code-heading">core/urls.py</div>
+from django.urls import path
+from core import views
+
+urlpatterns = [
+    path("post/new/", views.create_post, name="create_post"),
+    path("posts/", views.post_list, name="post_list"),
+]
+</code></pre>
+
+							<h3>Step 7: Templates</h3>
+
+							<pre><code><div class="code-heading">core/templates/create_post.html</div>
+&lt;h2&gt;Create Post&lt;/h2&gt;
+
+&lt;form method="POST" enctype="multipart/form-data"&gt;
+    {% csrf_token %}
+    {{ form.as_p }}
+    &lt;button type="submit"&gt;Save&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+							<pre><code><div class="code-heading">core/templates/post_list.html</div>
+&lt;h2&gt;All Posts&lt;/h2&gt;
+
+{% for post in posts %}
+    &lt;h3&gt;{{ post.title }}&lt;/h3&gt;
+    &lt;img src="{{ post.image.url }}" width="250" /&gt;
+    &lt;hr&gt;
+{% empty %}
+    &lt;p&gt;No posts yet&lt;/p&gt;
+{% endfor %}
+</code></pre>
+
+							<h3>Important Notes</h3>
+							<ul>
+								<li>
+									Always use <code>enctype="multipart/form-data"</code> for file
+									uploads
+								</li>
+								<li>Access images using <code>{{ image_field.url }}</code></li>
+								<li>Images are stored inside the <code>media/</code> folder</li>
+							</ul>
+						</div>
+
+						<div style="margin-top: 12px; display: flex; gap: 8px">
+							<button class="btn" onclick="window.print()">Print lesson</button>
+						</div>
+					</article>
+				</section>
+
+				<aside>
+					<div class="card">
+						<h3>Contents</h3>
+						<ul class="toc">
+							<li><a href="#image-upload">Image Upload</a></li>
+						</ul>
+
+						<h4>Task</h4>
+						<ul>
+							<li>Create a post with an image</li>
+							<li>Display uploaded image in browser</li>
+						</ul>
+					</div>
+				</aside>
+			</main>
+
+			<div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+		</div>
+
+		<script src="assests/scripts.js"></script>
+	</body>
+</html>

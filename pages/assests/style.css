@@ -186,6 +186,10 @@ footer {
 	text-align: center;
 }
 
+.danger{
+	color: red;
+}
+
 .flex {
 	display: flex;
 	align-items: center;
