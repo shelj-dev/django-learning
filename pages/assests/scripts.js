@@ -1,3 +1,19 @@
+document.addEventListener('copy', e => e.preventDefault());
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+	if (e.ctrlKey && e.key === 'c') e.preventDefault();
+});
+document.addEventListener('keydown', function (e) {
+	if (
+		e.key === 'F12' ||
+		(e.ctrlKey && e.shiftKey && ['I', 'C', 'J'].includes(e.key)) ||
+		(e.ctrlKey && e.key === 'U')
+	) {
+		e.preventDefault();
+		alert('NO NO GO AND TYPE YOUR CODE😒😒🤐🤡');
+	}
+});
+
 // Images navigations
 const images = document.querySelectorAll(".gallery-img");
 const lightbox = document.getElementById("lightbox");

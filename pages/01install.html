@@ -27,18 +27,17 @@
 						<p>Commands to create a Django project using virtual environment:</p>
 						<pre><code><span class="code-heading">Terminal</span>
 # create venv (example)
-python -m venv venv
+python -m venv .venv
 
 # Virtual environment run command
-# source venv/bin/activate             # linux / mac
-venv\Scripts\activate                  # windows
+# source .venv/bin/activate             # linux / mac
+.venv\Scripts\activate                  # windows
 
 # install django
 pip install django
 
 # create project
-django-admin startproject myproject
-cd myproject
+django-admin startproject myproject .
 
 # run development server
 python manage.py runserver
@@ -61,6 +60,8 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code></pre>
 						<h3>Create app</h3>
 						<p>Where the project files and logic lives.</p>
 
+						<p class="yellow">To stop the server press <code>ctrl+c</code></p>
+
 						<pre><code><span class="code-heading">Terminal</span>
 python manage.py startapp myapp
 </code></pre>
@@ -73,7 +74,7 @@ python manage.py startapp myapp
 │  ├─ settings.py
 │  ├─ urls.py
 │  └─ wsgi.py
-└─ myapp/          # app
+└─ myapp/          	     # app
    ├─ __init__.py
    ├─ admin.py
    ├─ apps.py
@@ -82,25 +83,11 @@ python manage.py startapp myapp
    └─ views.py
 </code></pre>
 
-						<hr />
 						<br />
-						<!-- Cheat sheets ------------------------------------------------------------------------>
-
-						<h2 id="cheatsheet">Cheat sheet</h2>
-						<pre><code><div class="code-heading">Common commands</div>
-# Activate virtual environments
-venv/scripts/activate
-
-# Change Directory
-cd FOLDER_NAME
-
-# Run server
-python manage.py runserver
-</code></pre>
-
-						<div style="margin-top: 12px; display: flex; gap: 8px">
+						
+						<!-- <div style="margin-top: 12px; display: flex; gap: 8px">
 							<button class="btn" onclick="window.print()">Print lesson</button>
-						</div>
+						</div> -->
 					</article>
 				</section>
 
