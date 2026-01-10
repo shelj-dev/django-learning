@@ -1,16 +1,79 @@
-document.addEventListener('copy', e => e.preventDefault());
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => {
-	if (e.ctrlKey && e.key === 'c') e.preventDefault();
+setInterval(() => {
+	if (isLocked) {
+		if (window.outerWidth - window.innerWidth > 160) {
+			alert("DevTools detected");
+		}
+	}
+}, 1000);
+
+// ==========================================
+const UNLOCK_PASSWORD = "1234";
+const UNLOCK_KEYS = {
+	ctrl: true,
+	alt: false,
+	key: "u",
+	l_key: "l",
+};
+let isLocked = true;
+
+document.addEventListener("copy", (e) => {
+	if (isLocked) e.preventDefault();
 });
-document.addEventListener('keydown', function (e) {
+
+document.addEventListener("contextmenu", (e) => {
+	if (isLocked) e.preventDefault();
+});
+
+document.addEventListener("keydown", (e) => {
+	// Block Ctrl+C
+	if (isLocked) {
+		if (e.ctrlKey && e.key.toLowerCase() === "c") e.preventDefault();
+		if (
+			e.key === "F12" ||
+			(e.ctrlKey && e.shiftKey && ["i", "c", "j"].includes(e.key.toLowerCase())) ||
+			(e.ctrlKey && e.key.toLowerCase() === "u")
+		) {
+			e.preventDefault();
+			alert("NO NO GO AND TYPE YOUR CODE😒😒🤐🤡");
+		}
+	}
+	// Block DevTools shortcuts
 	if (
-		e.key === 'F12' ||
-		(e.ctrlKey && e.shiftKey && ['I', 'C', 'J'].includes(e.key)) ||
-		(e.ctrlKey && e.key === 'U')
+		isLocked &&
+		(e.key === "F12" ||
+			(e.ctrlKey && e.shiftKey && ["i", "c", "j"].includes(e.key.toLowerCase())) ||
+			(e.ctrlKey && e.key.toLowerCase() === "u"))
 	) {
 		e.preventDefault();
-		alert('NO NO GO AND TYPE YOUR CODE😒😒🤐🤡');
+		alert("NO NO GO AND TYPE YOUR CODE😒😒🤐🤡");
+	}
+
+	// ===================== UNLOCK SHORTCUT =====================
+	if (
+		e.ctrlKey === UNLOCK_KEYS.ctrl &&
+		e.altKey === UNLOCK_KEYS.alt &&
+		e.key.toLowerCase() === UNLOCK_KEYS.key
+	) {
+		e.preventDefault();
+		// const pass = prompt("Enter unlock password:");
+		const pass = "1234";
+
+		if (pass === UNLOCK_PASSWORD) {
+			isLocked = false;
+			document.documentElement.classList.add("unlock");
+			// alert("😎");
+		} else {
+			alert("😅");
+		}
+	}
+	if (
+		e.ctrlKey === UNLOCK_KEYS.ctrl &&
+		e.altKey === UNLOCK_KEYS.alt &&
+		e.key.toLowerCase() === UNLOCK_KEYS.l_key
+	) {
+		isLocked = true;
+		document.documentElement.classList.remove("unlock");
+		// alert("😁");
 	}
 });
 
@@ -71,7 +134,7 @@ const headerData = `<div class="brand">
 					<ul>
 						<li><a href="/django-learning/index.html">Home</a></li>
 					</ul>
-				</nav>`
+				</nav>`;
 const header = document.getElementById("header");
 
 header.innerHTML = headerData;
@@ -87,7 +150,7 @@ const footerData = `<footer style="background:#222; color:#fff; padding:15px; te
         <a href="https://github.com/Jijitha2006" style="color:#ccc; text-decoration:none;">Jiitha</a>
     </p>
 </footer>
-`
+`;
 const footer = document.getElementById("footer");
 
 footer.innerHTML = footerData;

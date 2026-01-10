@@ -17,10 +17,19 @@
 *::before,
 *::after {
 	box-sizing: border-box;
-	-webkit-user-select: none;
+	/* -webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
-	user-select: none;
+	user-select: none; */
+}
+
+.unlock *,
+.unlock *::before,
+.unlock *::after {
+	-webkit-user-select: auto !important;
+	-moz-user-select: auto !important;
+	-ms-user-select: auto !important;
+	user-select: auto !important;
 }
 
 html,
