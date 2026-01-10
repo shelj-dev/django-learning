@@ -11,7 +11,7 @@ const UNLOCK_PASSWORD = "1234";
 const UNLOCK_KEYS = {
 	ctrl: true,
 	alt: false,
-	key: "u",
+	key: "o",
 	l_key: "l",
 };
 let isLocked = true;
