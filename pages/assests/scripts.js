@@ -75,3 +75,21 @@ const headerData = `<div class="brand">
 const header = document.getElementById("header");
 
 header.innerHTML = headerData;
+
+// --------------------------------------------------------------
+// Footer
+const footerData = `<footer style="background:#222; color:#fff; padding:15px; text-align:center; margin-top:40px;">
+    <p>&copy; 2026 Foxtech Private Solutions</p>
+    <p>
+		<h3 style="display: inline-block">Contributors: </h3>
+        <a href="#" style="color:#ccc; text-decoration:none;">Foxtech.dev.labs</a> |
+        <a href="https://github.com/Ha-ily123" style="color:#ccc; text-decoration:none;">Haily</a> |
+        <a href="https://github.com/Jijitha2006" style="color:#ccc; text-decoration:none;">Jiitha</a>
+    </p>
+</footer>
+`
+const footer = document.getElementById("footer");
+
+footer.innerHTML = footerData;
+
+// --------------------------------------------------------------

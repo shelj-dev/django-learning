@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from myapp.forms import StudentForm
 from myapp.models import Student
 
+
 def home(request):
     return render(request, "home.html")
 

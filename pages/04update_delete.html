@@ -16,145 +16,163 @@
 					<article class="card">
 						<!-- Update --------------------------------------------------------->
 						<div class="lesson">
-							<h2 id="update-data">Update Data — Edit Post</h2>
-							<div class="meta">
-								Fetch existing data, populate form, update record using primary key
-								(id)
-							</div>
+							<h1><u>Update</u></h1>
+							<ul>
+								<p>
+									Django – Update (Notes)
+									<li>Update means modifying existing data in the database.</li>
+									<li>Existing records are fetched using their unique ID.</li>
+									<li>Django Models represent the existing data.</li>
+									<li>ModelForms are commonly used to update records.</li>
+									<li>The View loads the existing data into the form.</li>
+									<li>The view checks if the request method is POST.</li>
+									<li>Form data is validated before updating.</li>
+									<li>
+										If validation is successful, changes are saved to the
+										database.
+									</li>
+									<li>After updating, the user is redirected to another page.</li>
+									<li>
+										If validation fails, the form is shown again with errors.
+									</li>
+									<li>Templates display the pre-filled form.</li>
+									<li>CSRF protection is required for form submission.</li>
+									<li>URLs connect the update page to the view.</li>
+								</p>
+							</ul>
+
+							<h2 id="models">Models</h2>
+							<div class="meta">Use existing data — no new migrations</div>
 
 							<p>
-								To update a post, we fetch it from the database using its
-								<code>id</code>, pre-fill the form, and save the changes.
+								Updating data uses the same model definition. Django retrieves the
+								existing object from the database and updates its fields.
 							</p>
 
-							<!-- urls.py -->
-							<pre><code><div class="code-heading">core/urls.py</div>
-from django.urls import path
-from core import views
+							<pre><code>
+<div class="code-heading">myapp/models.py</div>
+from django.db import models
 
-urlpatterns = [
-    path("posts/", views.post_list, name="all_data"),
-    path("post/new/", views.create_post, name="create_post"),
-    path("post/edit/&lt;int:id&gt;/", views.update_post, name="update_post"),
-]
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    age = models.IntegerField()
 </code></pre>
 
-							<!-- views.py -->
-							<pre><code><div class="code-heading">core/views.py</div>
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
-from .forms import PostForm
+							<h2 id="views">Views</h2>
+							<div class="meta">Fetch object — bind form — save</div>
 
-def update_post(request, id):
-    post = get_object_or_404(Post, id=id)
+							<pre><code>
+<div class="code-heading">myapp/views.py</div>
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Student
+from .forms import StudentForm
+
+def update_student(request, id):
+    student = get_object_or_404(Student, id=id)
 
     if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
+        form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             form.save()
-            return redirect("all_data")
+            return redirect("read")
     else:
-        form = PostForm(instance=post)
+        form = StudentForm(instance=student)
 
-    return render(request, "update_post.html", {"form": form})
+    return render(request, "update.html", {"form": form})
 </code></pre>
 
-							<!-- template -->
-							<pre><code><div class="code-heading">core/templates/update_post.html</div>
-&lt;h2&gt;Update Post&lt;/h2&gt;
+							<h2 id="templates">Template</h2>
+							<div class="meta">Pre-filled form</div>
 
-&lt;form method="POST"&gt;
+							<pre><code>
+<div class="code-heading">templates/update.html</div>
+<form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    &lt;button type="submit"&gt;Update&lt;/button&gt;
-&lt;/form&gt;
-</code></pre>
-
-							<p>Add an edit link inside your post list:</p>
-
-							<pre><code><div class="code-heading">post_list.html</div>
-&lt;a href="{% url 'update_post' post.id %}"&gt;Edit&lt;/a&gt;
+    <button type="submit">Update</button>
+</form>
 </code></pre>
 						</div>
 
 						<hr />
 						<!-- Delete --------------------------------------------------------->
 						<div class="lesson">
-							<h2 id="delete-data">Delete Data — Remove Post</h2>
-							<div class="meta">Delete a record safely with confirmation</div>
+							<h1><u>Delete</u></h1>
+							<ul>
+								<p>
+									Django – Delete (Notes)
+									<li>Delete means removing existing data from the database.</li>
+									<li>Each record is identified using a unique ID.</li>
+									<li>Django Models represent the data to be deleted.</li>
+									<li>A View handles the request to delete data.</li>
+									<li>
+										The object is fetched from the database before deletion.
+									</li>
+									<li>Deletion usually requires user confirmation.</li>
+									<li>
+										Once confirmed, the object is permanently removed from the
+										database.
+									</li>
+									<li>After deletion, the user is redirected to another page.</li>
+									<li>
+										Delete operations should be protected from accidental
+										actions.
+									</li>
+									<li>CSRF protection is required for delete requests.</li>
+									<li>URLs connect the delete page to the view.</li>
+								</p>
+							</ul>
+
+							<h2 id="models">Models</h2>
+							<div class="meta">Use existing model — no migrations</div>
 
 							<p>
-								Delete functionality removes a post permanently. It’s good practice
-								to show a confirmation page before deletion.
+								Deleting data does not require changes to the model. Django uses the
+								existing model structure to locate and remove records.
 							</p>
 
-							<!-- urls.py -->
-							<pre><code><div class="code-heading">core/urls.py</div>
-from django.urls import path
-from core import views
+							<pre><code>
+<div class="code-heading">myapp/models.py</div>
+from django.db import models
 
-urlpatterns = [
-    path("post/delete/&lt;int:id&gt;/", views.delete_post, name="delete_post"),
-]
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    age = models.IntegerField()
 </code></pre>
 
-							<!-- views.py -->
-							<pre><code><div class="code-heading">core/views.py</div>
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
+							<h2 id="views">Views</h2>
+							<div class="meta">Fetch object — confirm — delete</div>
 
-def delete_post(request, id):
-    post = get_object_or_404(Post, id=id)
+							<pre><code>
+<div class="code-heading">myapp/views.py</div>
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Student
+
+def delete_student(request, id):
+    student = get_object_or_404(Student, id=id)
 
     if request.method == "POST":
-        post.delete()
-        return redirect("all_data")
+        student.delete()
+        return redirect("read")
 
-    return render(request, "delete_post.html", {"post": post})
+    return render(request, "delete.html", {"student": student})
 </code></pre>
 
-							<!-- template -->
-							<pre><code><div class="code-heading">core/templates/delete_post.html</div>
-&lt;h2&gt;Delete Post&lt;/h2&gt;
-&lt;p&gt;Are you sure you want to delete "&lt;strong&gt;{{ post.title }}&lt;/strong&gt;"?&lt;/p&gt;
+							<h2 id="templates">Template</h2>
+							<div class="meta">Confirmation page</div>
 
-&lt;form method="POST"&gt;
+							<pre><code>
+<div class="code-heading">templates/delete.html</div>
+<form method="POST">
     {% csrf_token %}
-    &lt;button type="submit"&gt;Yes, Delete&lt;/button&gt;
-    &lt;a href="{% url 'all_data' %}"&gt;Cancel&lt;/a&gt;
-&lt;/form&gt;
+    <p>Are you sure you want to delete "{{ student.name }}"?</p>
+    <button type="submit">Yes, Delete</button>
+    <a href="{% url 'read' %}">Cancel</a>
+</form>
 </code></pre>
-
-							<p>Add delete link in post list:</p>
-
-							<pre><code><div class="code-heading">post_list.html</div>
-&lt;a href="{% url 'delete_post' post.id %}"&gt;Delete&lt;/a&gt;
-</code></pre>
-						</div>
-
-						<div style="margin-top: 12px; display: flex; gap: 8px">
-							<button class="btn" onclick="window.print()">Print lesson</button>
 						</div>
 					</article>
 				</section>
-
-				<!-- <aside>
-					<div class="card">
-						<h3>Contents</h3>
-						<ul class="toc">
-							<li><a href="#project-layout">Getting started</a></li>
-						</ul>
-
-						<h4>Resources</h4>
-						<ul>
-							<li>
-								<a href="https://www.djangoproject.com/">
-									Django docs — read the tutorial and refs</a
-								>
-							</li>
-						</ul>
-					</div>
-				</aside> -->
 			</main>
 
 			<div id="lightbox">
@@ -163,6 +181,7 @@ def delete_post(request, id):
 				<div id="prev" class="nav">&#10094;</div>
 				<div id="next" class="nav">&#10095;</div>
 			</div>
+			<div id="footer"></div>
 		</div>
 		<script src="assests/scripts.js"></script>
 	</body>

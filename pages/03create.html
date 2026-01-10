@@ -1,30 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Foxtech | GET & POST Data</title>
+		<link rel="stylesheet" href="assests/style.css" />
+	</head>
 
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>Foxtech | GET & POST Data</title>
-	<link rel="stylesheet" href="assests/style.css" />
-</head>
+	<body>
+		<div class="wrap">
+			<header id="header"></header>
 
-<body>
-	<div class="wrap">
-		<header id="header"></header>
+			<main>
+				<section>
+					<article class="card">
+						<div class="lesson">
+							<h1><u>Create</u></h1>
+							<ul>
+								<p>
+									Django – Create (Notes)
+									<li>Create means adding new data (records) to the database.</li>
+									<li>Django uses Models to define what data will be stored.</li>
+									<li>Data is created using Forms or ModelForms.</li>
+									<li>A View handles the request to create data.</li>
+									<li>The view checks if the request method is POST.</li>
+									<li>Form data is validated before saving.</li>
+									<li>
+										If validation is successful, data is saved to the database.
+									</li>
+									<li>
+										After saving, the user is usually redirected to another
+										page.
+									</li>
+									<li>
+										If validation fails, the form is shown again with errors.
+									</li>
+									<li>Templates display the form to the user.</li>
+									<li>CSRF protection is required for form submission.</li>
+									<li>URLs connect the create page to the view.</li>
+								</p>
+							</ul>
+							<h2 id="models">Models</h2>
+							<div class="meta">Define your data (ORM) — migrations</div>
 
-		<main>
-			<section>
-				<article class="card">
-					<div class="lesson">
-						<h2 id="models">Models</h2>
-						<div class="meta">Define your data (ORM) — migrations</div>
-
-						<p>
-							A model is a Python class that maps to a database table. Django’s
-							ORM (Object-Relational Mapper) converts model instances to rows and
-							fields to columns, so we work in Python instead of raw SQL.
-						</p>
-						<pre><code><div class="code-heading">myapp/models.py</div>
+							<p>
+								A model is a Python class that maps to a database table. Django’s
+								ORM (Object-Relational Mapper) converts model instances to rows and
+								fields to columns, so we work in Python instead of raw SQL.
+							</p>
+							<pre><code><div class="code-heading">myapp/models.py</div>
 from django.db import models
 
 class Student(models.Model):
@@ -32,67 +56,26 @@ class Student(models.Model):
     age = models.IntegerField()
 </code></pre>
 
-						<p>Make & apply migrations:</p>
-						<pre><code><div class="code-heading">Terminal</div>
+							<p>Make & apply migrations:</p>
+							<pre><code><div class="code-heading">Terminal</div>
 python manage.py makemigrations
 python manage.py migrate
 </code></pre>
-					</div>
-
-					<div>
-						<img class="gallery-img img" src="img/4.png" alt="" />
-					</div>
-
-					<br />
-					<hr />
-					<!-- forms -->
-					<div class="lesson">
-						<p>
-							Django – Create (Notes)
-							<li>
-								Create means adding new data (records) to the database.
-							</li>
-							<li>
-								Django uses Models to define what data will be stored.
-							</li>
-							<li>
-								Data is created using Forms or ModelForms.
-							</li>
-							<li>
-								A View handles the request to create data.
-							</li>
-							<li>
-								The view checks if the request method is POST.
-							</li>
-							<li>
-								Form data is validated before saving.
-							</li>
-							<li>
-								If validation is successful, data is saved to the database.
-							</li>
-							<li>
-								After saving, the user is usually redirected to another page.
-							</li>
-							<li>
-								If validation fails, the form is shown again with errors.
-							</li>
-							<li>
-								Templates display the form to the user.
-							</li>
-							<li>
-								CSRF protection is required for form submission.
-							</li>
-							<li>
-								URLs connect the create page to the view.
-							</li>
-						</p>
-						<h2 id="get-data">Form</h2>
-						<div class="meta">
-							Create <code>forms.py</code>,
 						</div>
 
-						<!-- URLs -->
-						<pre><code><div class="code-heading">myapp/forms.py</div>
+						<div>
+							<img class="gallery-img img" src="img/4.png" alt="" />
+						</div>
+
+						<br />
+						<hr />
+						<!-- forms -->
+						<div class="lesson">
+							<h2 id="get-data">Form</h2>
+							<div class="meta">Create <code>forms.py</code>,</div>
+
+							<!-- URLs -->
+							<pre><code><div class="code-heading">myapp/forms.py</div>
 from django import forms
 from myapp.models import Student
 
@@ -102,7 +85,7 @@ class StudentForm(forms.ModelForm):
         fields = ['name', 'age']
 </code></pre>
 
-						<pre><code><div class="code-heading">myapp/views.py</div>
+							<pre><code><div class="code-heading">myapp/views.py</div>
 from django.shortcuts import render, redirect
 from myapp.forms import StudentForm
 
@@ -120,7 +103,7 @@ def create(request):
     return render(request, "create.html", {'form': form})
 </code></pre>
 
-						<pre><code><div class="code-heading">myapp/urls.py</div>
+							<pre><code><div class="code-heading">myapp/urls.py</div>
 from django.urls import path
 from myapp import views
 
@@ -130,39 +113,52 @@ urlpatterns = [
 ]
 </code></pre>
 
-						<div>
-							<img class="gallery-img img" src="img/5.png" alt="" />
-							<img class="gallery-img img" src="img/6.png" alt="" />
-						</div>
-						<hr />
-						<!-- Get --------------------------------------------------------->
-						<div class="lesson">
-							<h2 id="get-data">Get Data — Read from DB & Requests</h2>
-							<div class="meta">
-								List & detail views, reading <code>request.GET</code>,
-								<code>request.POST</code>, and using <code>name="all_data"</code>
+							<div>
+								<img class="gallery-img img" src="img/5.png" alt="" />
+								<img class="gallery-img img" src="img/6.png" alt="" />
 							</div>
-
-							<p>
-								This lesson shows how to fetch posts from the DB (list & detail),
-								read query params, and read all POST fields (including a single
-								<code>all_data</code> textarea).
-							</p>
-
-							<!-- URLs -->
-							<pre><code><div class="code-heading">myapp/urls.py</div>
-path('read/', views.read, name="read"),
+							<hr />
+							<!-- Read --------------------------------------------------------->
+							<div class="lesson">
+								<h2 id="get-data"><u>Read</u> — Read from DB & Requests</h2>
+								<ul>
+									<p>
+										Django – Read (Notes)
+										<li>Read means retrieving data from the database.</li>
+										<li>Data is fetched using Django Models.</li>
+										<li>
+											The ORM is used to query records instead of raw SQL.
+										</li>
+										<li>A View handles the request to fetch data.</li>
+										<li>All records or a single record can be retrieved.</li>
+										<li>QuerySets are used to represent database data.</li>
+										<li>
+											Retrieved data is passed from the view to the template.
+										</li>
+										<li>
+											Templates display data dynamically using Django template
+											tags.
+										</li>
+										<li>Read operations do not modify the database.</li>
+										<li>URLs connect the read page to the view.</li>
+									</p>
+								</ul>
+								<!-- URLs -->
+								<pre><code><div class="code-heading">myapp/urls.py</div>
+	...
+	path('read/', views.read, name="read"),
 ]
 </code></pre>
 
-							<!-- views -->
-							<pre><code><div class="code-heading">myapp/views.py</div>
+								<!-- views -->
+								<pre><code><div class="code-heading">myapp/views.py</div>from myapp.models import Student
+
 def read(request):
     students = Student.objects.all()
     return render(request, "read.html", {'students': students})
 </code></pre>
 
-							<pre><code><div class="code-heading">myapp/templates/post_list.html</div>
+								<pre><code><div class="code-heading">myapp/templates/read.html</div>
 &lt;h2&gt;Student List&lt;h2&gt;
 &lt;ul&gt;
     {% for student in students %}
@@ -171,121 +167,13 @@ def read(request):
 &lt;/ul&gt;
 </code></pre>
 
-							<hr />
-						</div>
-
-						<!-- POst form --------------------------------------------------------->
-						<div class="lesson">
-							<h2 id="form-handling">Post Form — Adding Data</h2>
-							<div class="meta">
-								Create a form, validate it, save to the database (Models → Forms →
-								Views → Templates)
-							</div>
-
-							<p>
-								Django provides a powerful <code>forms.py</code> system that helps
-								you build HTML forms, validate input, and save model instances
-								easily.
-							</p>
-
-							<!-- forms.py -->
-							<pre><code><div class="code-heading">myapp/forms.py</div>
-from django import forms
-from .models import Post
-
-class PostForm(forms.ModelForm):
-    class Meta:
-        model = Post
-        fields = ["title", "body"]  # fields to render in form
-</code></pre>
-
-							<p>
-								Now create a view to render this form and save data on POST request.
-							</p>
-
-							<!-- views.py -->
-							<pre><code><div class="code-heading">myapp/views.py</div>
-from django.shortcuts import render, redirect
-from .forms import PostForm
-
-def create_post(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-            form.save()          # saves Post(title=..., body=...)
-            return redirect("all_data")
-    else:
-        form = PostForm()
-
-    return render(request, "create_post.html", {"form": form})
-</code></pre>
-
-							<p>Connect your new view to a URL:</p>
-
-							<!-- urls.py -->
-							<pre><code><div class="code-heading">myapp/urls.py</div>
-from django.urls import path
-from myapp import views
-
-urlpatterns = [
-    path("home/", views.home),
-	path("posts/", views.post_list, name="all_data"),
-    path("post/new/", views.create_post, name="create_post"),
-]
-</code></pre>
-
-							<p>
-								Create a template to display the form. Django form objects
-								automatically render labels and fields.
-							</p>
-
-							<!-- template -->
-							<pre><code><div class="code-heading">myapp/templates/create_post.html</div>
-&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-    &lt;title&gt;Create Post&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-
-    &lt;h2&gt;Create new Post&lt;/h2&gt;
-
-    &lt;form method="POST"&gt;
-        {% csrf_token %}
-        
-        {{ form.as_p }}    &lt;!-- renders fields with &lt;p&gt; tags --&gt;
-
-        &lt;button type="submit"&gt;Save&lt;/button&gt;
-    &lt;/form&gt;
-
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-
-							<p>Now visit:</p>
-							<pre><code>/myapp/post/new/</code></pre>
-							<div>
-								<img class="gallery-img img" src="img/5.png" alt="" />
-								<img class="gallery-img img" src="img/6.png" alt="" />
+								<hr />
 							</div>
 						</div>
-						<!-- Cheat sheets ------------------------------------------------------------------------>
-						<div>
-							<h2 id="cheatsheet">Cheat sheet</h2>
-							<pre><code><div class="code-heading">Common commands</div>
-python manage.py createsuperuser
-</code></pre>
+					</article>
+				</section>
 
-							<div style="margin-top: 12px; display: flex; gap: 8px">
-								<button class="btn" onclick="window.print()">Print lesson</button>
-							</div>
-						</div>
-				</article>
-			</section>
-
-			<!-- <aside>
+				<!-- <aside>
 					<div class="card">
 						<h3>Contents</h3>
 						<ul class="toc">
@@ -302,16 +190,16 @@ python manage.py createsuperuser
 						</ul>
 					</div>
 				</aside> -->
-		</main>
+			</main>
 
-		<div id="lightbox">
-			<span id="close">&times;</span>
-			<img id="lightbox-img" />
-			<div id="prev" class="nav">&#10094;</div>
-			<div id="next" class="nav">&#10095;</div>
+			<div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+			<div id="footer"></div>
 		</div>
-	</div>
-	<script src="assests/scripts.js"></script>
-</body>
-
+		<script src="assests/scripts.js"></script>
+	</body>
 </html>
