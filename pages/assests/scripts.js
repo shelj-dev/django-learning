@@ -1,10 +1,10 @@
-setInterval(() => {
-	if (isLocked) {
-		if (window.outerWidth - window.innerWidth > 160) {
-			alert("DevTools detected");
-		}
-	}
-}, 1000);
+// setInterval(() => {
+// 	if (isLocked) {
+// 		if (window.outerWidth - window.innerWidth > 160) {
+// 			alert("DevTools detected");
+// 		}
+// 	}
+// }, 1000);
 
 // ==========================================
 const UNLOCK_PASSWORD = "1234";
