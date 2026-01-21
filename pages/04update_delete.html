@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -41,23 +41,6 @@
 								</p>
 							</ul>
 
-							<h2 id="models">Models</h2>
-							<div class="meta">Use existing data — no new migrations</div>
-
-							<p>
-								Updating data uses the same model definition. Django retrieves the
-								existing object from the database and updates its fields.
-							</p>
-
-							<pre><code>
-<div class="code-heading">myapp/models.py</div>
-from django.db import models
-
-class Student(models.Model):
-    name = models.CharField(max_length=50)
-    age = models.IntegerField()
-</code></pre>
-
 							<h2 id="views">Views</h2>
 							<div class="meta">Fetch object — bind form — save</div>
 
@@ -67,7 +50,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Student
 from .forms import StudentForm
 
-def update_student(request, id):
+def update(request, id):
     student = get_object_or_404(Student, id=id)
 
     if request.method == "POST":
@@ -81,16 +64,23 @@ def update_student(request, id):
     return render(request, "update.html", {"form": form})
 </code></pre>
 
+							<h2 id="templates">Urls</h2>
+
+							<pre><code><div class="code-heading">myapp/urls.py</div>
+...
+path("update/&lt;int:id&gt;/", views.update, name="update"),
+...
+</code></pre>
+
 							<h2 id="templates">Template</h2>
 							<div class="meta">Pre-filled form</div>
 
-							<pre><code>
-<div class="code-heading">templates/update.html</div>
-<form method="POST">
+							<pre><code><div class="code-heading">templates/update.html</div>
+&lt;form method="post"&gt;
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Update</button>
-</form>
+    &lt;button type="submit"&gt;Update Student&lt;/button&gt;
+&lt;/form&gt;
 </code></pre>
 						</div>
 
@@ -123,23 +113,6 @@ def update_student(request, id):
 								</p>
 							</ul>
 
-							<h2 id="models">Models</h2>
-							<div class="meta">Use existing model — no migrations</div>
-
-							<p>
-								Deleting data does not require changes to the model. Django uses the
-								existing model structure to locate and remove records.
-							</p>
-
-							<pre><code>
-<div class="code-heading">myapp/models.py</div>
-from django.db import models
-
-class Student(models.Model):
-    name = models.CharField(max_length=50)
-    age = models.IntegerField()
-</code></pre>
-
 							<h2 id="views">Views</h2>
 							<div class="meta">Fetch object — confirm — delete</div>
 
@@ -148,7 +121,7 @@ class Student(models.Model):
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Student
 
-def delete_student(request, id):
+def delete(request, id):
     student = get_object_or_404(Student, id=id)
 
     if request.method == "POST":
@@ -158,17 +131,23 @@ def delete_student(request, id):
     return render(request, "delete.html", {"student": student})
 </code></pre>
 
+							<h2 id="templates">Urls</h2>
+
+							<pre><code><div class="code-heading">myapp/urls.py</div>
+...
+path("delete/&lt;int:id&gt;/", views.delete, name="delete"),
+...
+</code></pre>
 							<h2 id="templates">Template</h2>
 							<div class="meta">Confirmation page</div>
 
-							<pre><code>
-<div class="code-heading">templates/delete.html</div>
-<form method="POST">
+							<pre><code><div class="code-heading">templates/delete.html</div>
+&lt;form method="POST"&gt;
     {% csrf_token %}
-    <p>Are you sure you want to delete "{{ student.name }}"?</p>
-    <button type="submit">Yes, Delete</button>
-    <a href="{% url 'read' %}">Cancel</a>
-</form>
+    &lt;p&gt;Are you sure you want to delete "{{ student.name }}"?&lt;/p&gt;
+    &lt;button type="submit"&gt;Yes, Delete&lt;/button&gt;
+    &lt;a href="{% url 'read' %}"&gt;Cancel&lt;/a&gt;
+&lt;/form&gt;
 </code></pre>
 						</div>
 					</article>

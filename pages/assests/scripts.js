@@ -1,17 +1,8 @@
-// setInterval(() => {
-// 	if (isLocked) {
-// 		if (window.outerWidth - window.innerWidth > 160) {
-// 			alert("DevTools detected");
-// 		}
-// 	}
-// }, 1000);
-
-// ==========================================
-const UNLOCK_PASSWORD = "1234";
+const UNLOCK_PASSWORD = "shelji";
 const UNLOCK_KEYS = {
 	ctrl: true,
 	alt: false,
-	key: "o",
+	key: "p",
 	l_key: "l",
 };
 let isLocked = true;
@@ -56,7 +47,7 @@ document.addEventListener("keydown", (e) => {
 	) {
 		e.preventDefault();
 		// const pass = prompt("Enter unlock password:");
-		const pass = "1234";
+		const pass = "shelj";
 
 		if (pass === UNLOCK_PASSWORD) {
 			isLocked = false;

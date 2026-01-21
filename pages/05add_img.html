@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -36,105 +36,90 @@ pip install pillow
 
 							<h3>Step 2: Model with ImageField</h3>
 
-							<pre><code><div class="code-heading">core/models.py</div>
+							<pre><code><div class="code-heading">myapp/models.py</div>
 from django.db import models
 
-class Post(models.Model):
-    title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to="posts/")
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    age = models.IntegerField()
+    profile_pic = models.ImageField(upload_to="profile/", null=True, blank=True)
+</code></pre>
 
-    def __str__(self):
-        return self.title
+							<pre><code><div class="code-heading">Terminal</div>
+python manage.py makemigrations
+python manage.py migrate
 </code></pre>
 
 							<h3>Step 3: Media settings</h3>
 
-							<pre><code><div class="code-heading">settings.py</div>
+							<pre><code><div class="code-heading">myproject/settings.py</div>
+...
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 </code></pre>
 
-							<pre><code><div class="code-heading">project/urls.py</div>
+							<pre><code><div class="code-heading">myproject/urls.py</div>
+...
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # your urls
+    ...
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 </code></pre>
+							<h3>Step 4: Forms</h3>
 
-							<h3>Step 4: Form</h3>
-
-							<pre><code><div class="code-heading">core/forms.py</div>
+							<pre><code><div class="code-heading">myapp/forms.py</div>
 from django import forms
-from .models import Post
+from myapp.models import Student
 
-class PostForm(forms.ModelForm):
+class StudentForm(forms.ModelForm):
     class Meta:
-        model = Post
-        fields = ["title", "image"]
+        model = Student
+        fields = ['name', 'age', 'profile_pic']
 </code></pre>
-
 							<h3>Step 5: View</h3>
 
-							<pre><code><div class="code-heading">core/views.py</div>
-from django.shortcuts import render, redirect
-from .forms import PostForm
-from .models import Post
-
-def create_post(request):
+							<pre><code><div class="code-heading">myapp/views.py</div>
+def create(request):
     if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
+        form = StudentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect("post_list")
+            return redirect('home')
     else:
-        form = PostForm()
-
-    return render(request, "create_post.html", {"form": form})
-
-def post_list(request):
-    posts = Post.objects.all()
-    return render(request, "post_list.html", {"posts": posts})
+        form = StudentForm()
+    return render(request, "create.html", {'form': form})
 </code></pre>
 
-							<h3>Step 6: URLs</h3>
+							<h3>Step 6: Templates</h3>
 
-							<pre><code><div class="code-heading">core/urls.py</div>
-from django.urls import path
-from core import views
-
-urlpatterns = [
-    path("post/new/", views.create_post, name="create_post"),
-    path("posts/", views.post_list, name="post_list"),
-]
-</code></pre>
-
-							<h3>Step 7: Templates</h3>
-
-							<pre><code><div class="code-heading">core/templates/create_post.html</div>
+							<pre><code><div class="code-heading">myapp/templates/create.html</div>
 &lt;h2&gt;Create Post&lt;/h2&gt;
 
 &lt;form method="POST" enctype="multipart/form-data"&gt;
     {% csrf_token %}
     {{ form.as_p }}
-    &lt;button type="submit"&gt;Save&lt;/button&gt;
+    &lt;button&gt;Create&lt;/button&gt;
 &lt;/form&gt;
 </code></pre>
 
-							<pre><code><div class="code-heading">core/templates/post_list.html</div>
-&lt;h2&gt;All Posts&lt;/h2&gt;
-
-{% for post in posts %}
-    &lt;h3&gt;{{ post.title }}&lt;/h3&gt;
-    &lt;img src="{{ post.image.url }}" width="250" /&gt;
-    &lt;hr&gt;
-{% empty %}
-    &lt;p&gt;No posts yet&lt;/p&gt;
-{% endfor %}
+							<pre><code><div class="code-heading">myapp/templates/read.html</div>
+&lt;h1&gt;Student List&lt;/h1&gt;
+&lt;ul&gt;
+    {% for student in students %}
+    &lt;li&gt;
+		{% if student.profile_pic %}
+			&lt;img src="{{ student.profile_pic.url }}" width="120" /&gt;
+		{% endif %}
+        {{ student.name }} - {{ student.age }} years old
+    &lt;/li&gt;
+    &lt;hr /&gt;
+    {% endfor %}
+&lt;/ul&gt;
 </code></pre>
 
 							<h3>Important Notes</h3>
@@ -146,10 +131,6 @@ urlpatterns = [
 								<li>Access images using <code>{{ image_field.url }}</code></li>
 								<li>Images are stored inside the <code>media/</code> folder</li>
 							</ul>
-						</div>
-
-						<div style="margin-top: 12px; display: flex; gap: 8px">
-							<button class="btn" onclick="window.print()">Print lesson</button>
 						</div>
 					</article>
 				</section>
@@ -177,7 +158,6 @@ urlpatterns = [
 				<div id="next" class="nav">&#10095;</div>
 			</div>
 			<div id="footer"></div>
-
 		</div>
 
 		<script src="assests/scripts.js"></script>
