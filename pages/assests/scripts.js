@@ -6,6 +6,7 @@ const UNLOCK_KEYS = {
 	l_key: "l",
 };
 let isLocked = true;
+// let isLocked = false;
 
 document.addEventListener("copy", (e) => {
 	if (isLocked) e.preventDefault();
