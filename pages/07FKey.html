@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Foxtech | Django HTML</title>
+		<link rel="stylesheet" href="assests/style.css" />
+	</head>
+
+	<body>
+		<div class="wrap">
+			<header id="header"></header>
+
+			<main>
+				<section>
+					<article class="card">
+						<!-- Lesson --------------------------------------------------------->
+						<div class="lesson">
+							<h2 id="django-html">Foreign Key in Django</h2>
+							<div class="meta">
+								Learn how Django uses Foreign Keys to link models and display related data in HTML pages using templates and Python logic
+							</div>
+
+							<p>
+								In Django, a Foreign Key is used to create a relationship between two database tables (models).
+It represents a <strong>many-to-one relationship</strong>.
+							</p>
+
+							<h3>Step 1: Student Table</h3>
+							<p>
+								Static HTML files are placed inside the
+								<code>templates/</code> folder.
+							</p>
+
+							<pre><code><div class="code-heading">myapp/models.py</div>
+                                from django.db import models
+
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    age = models.IntegerField()
+    profile_pic = models.ImageField(upload_to="profile/", null=True, blank=True)
+
+def __str__(self):
+    return self.name
+
+class Course(models.Model):
+    name = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    course_name = models.CharField(max_length=50)
+                                </code></pre>
+                                <p>Make & apply migrations:</p>
+							<pre><code><div class="code-heading">Terminal</div>
+python manage.py makemigrations
+python manage.py migrate
+</code></pre>
+<pre><code><div class="code-heading">myapp/forms.py</div>
+    from django import forms
+from myapp.models import Student,Course
+
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['name', 'age', 'profile_pic']
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['name', 'course_name']
+
+    
+    </code></pre>
+    <pre><code><div class="code-heading">myapp/views.py</div>
+        from django.shortcuts import render, redirect, get_object_or_404
+        from myapp.forms import StudentForm ,CourseForm
+        from myapp.models import Student,Course
+        
+        def course_create(request):
+            if request.method == "POST":
+                form = CourseForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    return redirect('home')
+            else:
+                form = CourseForm()
+            return render(request, "course_create.html", {'form': form})
+        </code></pre>
+        <pre><code><div class="code-heading">myapp/urls.py</div>
+            from django.urls import path
+from myapp import views
+
+urlpatterns = [
+    ....,
+    path('course_create/', views.course_create, name="course_create"),
+]
+            </code></pre>
+            <pre><code><div class="code-heading">myapp/templates/course_create.html</div>
+                &lt;form method="post"&gt;
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    &lt;button type="submit"&gt;Submit&lt;/button&gt;
+                &lt;/form&gt;
+                </code></pre>
+                <h1>Output</h1>
+                <div>
+                    <img class="gallery-img img" src="img/5.png" alt="" />
+                    <img class="gallery-img img" src="img/6.png" alt="" />
+                </div>
+                
+
+
+							<!-- <h3>Step 2: Rendering HTML from Views</h3>
+
+							<pre><code><div class="code-heading">myapp/views.py</div>
+from django.shortcuts import render
+
+def home(request):
+    return render(request, "home.html")
+</code></pre>
+
+							<h3>Step 3: Dynamic HTML (Passing Data)</h3>
+							<p>
+								You can send Python data from views to HTML templates using context.
+							</p>
+
+							<pre><code><div class="code-heading">myapp/views.py</div>
+def dashboard(request):
+    context = {
+        "username": "Shelj",
+        "age": 22
+    }
+    return render(request, "dashboard.html", context)
+</code></pre>
+
+							<pre><code><div class="code-heading">myapp/templates/dashboard.html</div>
+&lt;h2&gt;Dashboard&lt;/h2&gt;
+&lt;p&gt;Name: {{ username }}&lt;/p&gt;
+&lt;p&gt;Age: {{ age }}&lt;/p&gt;
+</code></pre>
+
+							<h3>Step 4: Python Logic inside HTML</h3>
+							<p>
+								Django provides template tags for logic like loops and conditions.
+							</p>
+
+							<pre><code><div class="code-heading">Example</div>
+&lt;ul&gt;
+    {% for item in items %}
+        &lt;li&gt;{{ item }}&lt;/li&gt;
+    {% endfor %}
+&lt;/ul&gt;
+</code></pre>
+
+							<pre><code><div class="code-heading">If Condition</div>
+{% if is_logged_in %}
+    &lt;p&gt;Welcome back!&lt;/p&gt;
+{% else %}
+    &lt;p&gt;Please log in&lt;/p&gt;
+{% endif %}
+</code></pre>
+
+							<h3>Step 5: Template Inheritance</h3>
+							<p>Reuse HTML using a base template.</p>
+
+							<pre><code><div class="code-heading">myapp/templates/base.html</div>
+&lt;html&gt;
+&lt;body&gt;
+    &lt;header&gt;My Site&lt;/header&gt;
+
+    {% block content %}
+    {% endblock %}
+
+    &lt;footer&gt;Footer&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+							<pre><code><div class="code-heading">child.html</div>
+{% extends "base.html" %}
+
+{% block content %}
+&lt;h1&gt;Child Page&lt;/h1&gt;
+{% endblock %}
+</code></pre>
+
+							<h3>Step 6: Static Files (CSS & JS)</h3>
+
+							<pre><code><div class="code-heading">HTML</div>
+{% load static %}
+&lt;link rel="stylesheet" href="{% static 'css/style.css' %}"&gt;
+</code></pre>
+
+							<h3>Important Notes</h3>
+							<ul>
+								<li>Django templates do NOT allow raw Python code</li>
+								<li>Use <code>{{ }}</code> for variables</li>
+								<li>Use <code>{% %}</code> for logic</li>
+								<li>Always escape HTML automatically (secure)</li>
+							</ul>
+						</div>
+					</article>
+				</section>
+
+				<aside>
+					<div class="card">
+						<h3>Contents</h3>
+						<ul class="toc">
+							<li><a href="#django-html">Django HTML Basics</a></li>
+						</ul>
+
+						<h4>Task</h4>
+						<ul>
+							<li>Create a static page</li>
+							<li>Pass data from view to template</li>
+							<li>Use loop and if condition</li>
+						</ul> -->
+					</div>
+				</aside>
+			</main>
+			<div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+			<div id="footer"></div>
+		</div>
+
+		<script src="assests/scripts.js"></script>
+	</body>
+</html>
