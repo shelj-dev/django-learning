@@ -33,7 +33,7 @@ It represents a <strong>many-to-one relationship</strong>.
 							</p>
 
 							<pre><code><div class="code-heading">myapp/models.py</div>
-                                from django.db import models
+from django.db import models
 
 class Student(models.Model):
     name = models.CharField(max_length=50)
@@ -53,7 +53,7 @@ python manage.py makemigrations
 python manage.py migrate
 </code></pre>
 <pre><code><div class="code-heading">myapp/forms.py</div>
-    from django import forms
+from django import forms
 from myapp.models import Student,Course
 
 class StudentForm(forms.ModelForm):
@@ -69,22 +69,22 @@ class CourseForm(forms.ModelForm):
     
     </code></pre>
     <pre><code><div class="code-heading">myapp/views.py</div>
-        from django.shortcuts import render, redirect, get_object_or_404
-        from myapp.forms import StudentForm ,CourseForm
-        from myapp.models import Student,Course
+from django.shortcuts import render, redirect, get_object_or_404
+from myapp.forms import StudentForm ,CourseForm
+from myapp.models import Student,Course
         
-        def course_create(request):
-            if request.method == "POST":
-                form = CourseForm(request.POST)
-                if form.is_valid():
-                    form.save()
-                    return redirect('home')
-            else:
-                form = CourseForm()
-            return render(request, "course_create.html", {'form': form})
+def course_create(request):
+    if request.method == "POST":
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = CourseForm()
+    return render(request, "course_create.html", {'form': form})
         </code></pre>
         <pre><code><div class="code-heading">myapp/urls.py</div>
-            from django.urls import path
+from django.urls import path
 from myapp import views
 
 urlpatterns = [
@@ -93,16 +93,16 @@ urlpatterns = [
 ]
             </code></pre>
             <pre><code><div class="code-heading">myapp/templates/course_create.html</div>
-                &lt;form method="post"&gt;
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    &lt;button type="submit"&gt;Submit&lt;/button&gt;
-                &lt;/form&gt;
-                </code></pre>
+    &lt;form method="post"&gt;
+        {% csrf_token %}
+        {{ form.as_p }}
+        &lt;button type="submit"&gt;Submit&lt;/button&gt;
+    &lt;/form&gt;
+            </code></pre>
                 <h1>Output</h1>
                 <div>
-                    <img class="gallery-img img" src="img/5.png" alt="" />
-                    <img class="gallery-img img" src="img/6.png" alt="" />
+                    <img class="gallery-img img" src="img/7.png" alt="" /><br/>
+                    <img class="gallery-img img" src="img/8.png" alt="" />
                 </div>
                 
 
