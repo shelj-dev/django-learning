@@ -1,7 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from myapp.forms import StudentForm
-from myapp.models import Student
+from myapp.forms import StudentForm ,CourseForm
+from myapp.models import Student,Course
 
+def course_create(request):
+    if request.method == "POST":
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = CourseForm()
+    return render(request, "course_create.html", {'form': form})
 
 def home(request):
     return render(request, "home.html")
