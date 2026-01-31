@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foxtech | Django HTML</title>
+    <link rel="stylesheet" href="assests/style.css" />
+</head>
+<body>
+    <div class="wrap">
+       <header id="header"></header> 
+       <main>
+        <section>
+            <article class="card">
+                <div class="lesson">
+                    <h2 id="django-html">create supervisor</h2>
+                </div>
+            </article>
+        </section>
+       </main>
+       <div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+			<div id="footer"></div>
+    </div>
+</body>
+</html>
