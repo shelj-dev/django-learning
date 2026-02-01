@@ -1,36 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foxtech | Django HTML</title>
     <link rel="stylesheet" href="assests/style.css" />
 </head>
+
 <body>
     <div class="wrap">
-       <header id="header"></header> 
-       <main>
-        <section>
-            <article class="card">
-                <div class="lesson">
-                    <h2 id="django-html">create supervisor</h2>
-                    <div class="meta">
-						Learn how to create user supervisor inside Django using templates and Python logic
-					</div>
-                    <p>
-                        In Django, a superuser (admin/supervisor user) is created using Django's <strong>built-in authentication</strong> system.
-                    </p>
-                </div>
-            </article>
-        </section>
-       </main>
-       <div id="lightbox">
-				<span id="close">&times;</span>
-				<img id="lightbox-img" />
-				<div id="prev" class="nav">&#10094;</div>
-				<div id="next" class="nav">&#10095;</div>
-			</div>
-			<div id="footer"></div>
+        <header id="header"></header>
+        <main>
+            <section>
+                <article class="card">
+                    <div class="lesson">
+                        <h2 id="django-html">create supervisor</h2>
+                        <div class="meta">
+                            Learn how to create user supervisor inside Django using templates and Python logic
+                        </div>
+                        <p>
+                            In Django, a superuser (admin/supervisor user) is created using Django's <strong>built-in
+                                authentication</strong> system.
+                        </p>
+                        <h3>Step 1: User Table</h3>
+                        <p>
+                            Static HTML files are placed inside the
+                            <code>templates/</code> folder.
+                        </p>
+                        <pre><code><div class="code-heading">myapp/form.py</div>
+from django.contrib.auth.models import User
+...
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'first_name', 'last_name']
+                        </code></pre>
+                        <pre><code><div class="code-heading">myapp/view.py</div>
+def signup(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user=form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            return redirect('home')
+    else:
+        form = UserForm()
+    return render(request, "signup.html", {'form': form})
+                        </code></pre>
+                        <pre><code><div class="code-heading">myapp/view.py</div>
+...                           
+path('signup/', views.signup, name="signup"),
+                        </code></pre>
+                        <h3>Output</h3>
+                        <div>
+							<img class="gallery-img img" src="img/10.png" alt="" />
+						</div>
+
+                    </div>
+                </article>
+            </section>
+        </main>
+        <div id="lightbox">
+            <span id="close">&times;</span>
+            <img id="lightbox-img" />
+            <div id="prev" class="nav">&#10094;</div>
+            <div id="next" class="nav">&#10095;</div>
+        </div>
+        <div id="footer"></div>
     </div>
 </body>
+
 </html>

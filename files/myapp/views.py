@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from myapp.forms import StudentForm ,CourseForm
 from myapp.models import Student,Course
+from .forms import UserForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 def course_create(request):
     if request.method == "POST":
@@ -58,9 +61,24 @@ def signup(request):
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
-            user=form.save()
-            login(request,user)
+            user=form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
             return redirect('home')
     else:
         form = UserForm()
-    return render(request, "create.html", {'form': form})
+    return render(request, "signup.html", {'form': form})
+
+def login(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user=form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            return redirect('home')
+    else:
+        form = UserForm()
+    return render(request, "signup.html", {'form': form})
+
+    
