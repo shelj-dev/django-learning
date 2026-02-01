@@ -11,3 +11,4 @@ def __str__(self):
 class Course(models.Model):
     name = models.ForeignKey(Student, on_delete=models.CASCADE)
     course_name = models.CharField(max_length=50)
+

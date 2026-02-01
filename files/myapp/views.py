@@ -53,3 +53,14 @@ def delete(request, id):
         return redirect("read")
 
     return render(request, "delete.html", {"student": student})
+
+def signup(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user=form.save()
+            login(request,user)
+            return redirect('home')
+    else:
+        form = UserForm()
+    return render(request, "create.html", {'form': form})
