@@ -1,75 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Foxtech | Django Admin & Superuser</title>
+		<link rel="stylesheet" href="assests/style.css" />
+	</head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foxtech | Django HTML</title>
-    <link rel="stylesheet" href="assests/style.css" />
-</head>
+	<body>
+		<div class="wrap">
+			<header id="header"></header>
 
-<body>
-    <div class="wrap">
-        <header id="header"></header>
-        <main>
-            <section>
-                <article class="card">
-                    <div class="lesson">
-                        <h2 id="django-html">create supervisor</h2>
-                        <div class="meta">
-                            Learn how to create user supervisor inside Django using templates and Python logic
-                        </div>
-                        <p>
-                            In Django, a superuser (admin/supervisor user) is created using Django's <strong>built-in
-                                authentication</strong> system.
-                        </p>
-                        <h3>Step 1: User Table</h3>
-                        <p>
-                            Static HTML files are placed inside the
-                            <code>templates/</code> folder.
-                        </p>
-                        <pre><code><div class="code-heading">myapp/form.py</div>
-from django.contrib.auth.models import User
-...
-class UserForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'password', 'first_name', 'last_name']
-                        </code></pre>
-                        <pre><code><div class="code-heading">myapp/view.py</div>
-def signup(request):
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user=form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            return redirect('home')
-    else:
-        form = UserForm()
-    return render(request, "signup.html", {'form': form})
-                        </code></pre>
-                        <pre><code><div class="code-heading">myapp/view.py</div>
-...                           
-path('signup/', views.signup, name="signup"),
-                        </code></pre>
-                        <h3>Output</h3>
-                        <div>
-							<img class="gallery-img img" src="img/10.png" alt="" />
+			<main>
+				<section>
+					<article class="card">
+						<h2 id="admin-superuser">Django Admin & Superuser</h2>
+						<p class="meta">
+							Model registration, superuser creation, admin login, database check
+						</p>
+
+						<p>
+							Django provides a built-in <strong>Admin Panel</strong> to manage data.
+							Only <strong>superusers</strong> or <strong>staff users</strong> can access it.
+						</p>
+
+						<h3>Register Models in Admin</h3>
+						<p>
+							Register models in <code>admin.py</code> to display them in the admin panel.
+						</p>
+
+						<pre><code><span class="code-heading">myapp/admin.py</span>
+from django.contrib import admin
+from myapp.models import Student, Course
+
+admin.site.register(Student)
+admin.site.register(Course)
+</code></pre>
+
+						<h3>Create Superuser</h3>
+						<p>
+							Create a superuser using the terminal.
+						</p>
+
+						<pre><code><span class="code-heading">Terminal</span>
+python manage.py createsuperuser
+</code></pre>
+
+						<pre><code><span class="code-heading">Example</span>
+Username: BSC
+Email address: abcd@gmail.com
+Password:
+Password (again):
+Superuser created successfully.
+</code></pre>
+
+						<h3>Admin Login</h3>
+						<p>
+							Open the admin login page:
+						</p>
+
+						<pre><code>
+http://127.0.0.1:8000/admin/
+</code></pre>
+
+						<div>
+							<img
+								class="gallery-img img"
+								src="img/11.png"
+								alt="Admin Login Page"
+							/>
 						</div>
 
-                    </div>
-                </article>
-            </section>
-        </main>
-        <div id="lightbox">
-            <span id="close">&times;</span>
-            <img id="lightbox-img" />
-            <div id="prev" class="nav">&#10094;</div>
-            <div id="next" class="nav">&#10095;</div>
-        </div>
-        <div id="footer"></div>
-    </div>
-</body>
+						<p>
+							Login using the <strong>superuser username</strong> and
+							<strong>password</strong>.
+						</p>
 
+						<h3>Admin Dashboard</h3>
+						<p>
+							After login, the admin dashboard appears.
+							You can manage all registered models.
+						</p>
+
+						<div>
+							<img
+								class="gallery-img img"
+								src="img/12.png"
+								alt="Admin Dashboard"
+							/>
+						</div>
+
+						<p>
+							Add, edit, or delete data for
+							<strong>Student</strong> and <strong>Course</strong>.
+						</p>
+
+						<h3>Database Verification</h3>
+						<p>
+							Data added through the admin panel is stored in the database.
+						</p>
+
+						<div>
+							<img
+								class="gallery-img img"
+								src="img/13.png"
+								alt="Database View"
+							/>
+						</div>
+
+						<p>
+							This confirms that admin data is saved successfully.
+						</p>
+					</article>
+				</section>
+
+				<aside>
+					<div class="card">
+						<h3>Contents</h3>
+						<ul class="toc">
+							<li><a href="#admin-superuser">Admin & Superuser</a></li>
+						</ul>
+
+						<h4>Steps</h4>
+						<ul>
+							<li>Register models</li>
+							<li>Create superuser</li>
+							<li>Login to admin</li>
+							<li>Add data</li>
+							<li>Check database</li>
+						</ul>
+					</div>
+				</aside>
+			</main>
+
+			<!-- 🔍 Lightbox -->
+			<div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+
+			<div id="footer"></div>
+		</div>
+
+		<script src="assests/scripts.js"></script>
+	</body>
 </html>
