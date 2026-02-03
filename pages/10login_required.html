@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Foxtech | Django Login Required</title>
+		<link rel="stylesheet" href="assests/style.css" />
+	</head>
+
+	<body>
+		<div class="wrap">
+			<header id="header"></header>
+
+			<main>
+				<section>
+					<article class="card">
+						<h2 id="login-required">Django Login Required</h2>
+						<p class="meta">
+							User authentication, login protection, decorators, redirect flow
+						</p>
+
+						<p>
+							Django provides the <strong>login_required</strong> decorator to
+							restrict access to views. Only authenticated users can access
+							protected pages.
+						</p>
+
+						<h3>Import Required Decorator</h3>
+						<p>
+							Import the decorator from Django’s authentication module.
+						</p>
+
+						<pre><code><span class="code-heading">views.py</span>
+from django.contrib.auth.decorators import login_required
+</code></pre>
+
+						<h3>Protecting a View</h3>
+						<p>
+							Apply the decorator to any view that requires user login.
+						</p>
+
+						<pre><code><span class="code-heading">views.py</span>
+@login_required(login_url="/myapp/login/")
+def home(request):
+    return render(request, "home.html")
+</code></pre>
+
+						<p>
+							If a user is <strong>not logged in</strong>, Django automatically
+							redirects them to the login page.
+						</p>
+
+						<h3>Login Page URL</h3>
+						<p>
+							The login URL specified in the decorator:
+						</p>
+
+						<pre><code>
+/myapp/login/
+</code></pre>
+
+						<div>
+							<img
+								class="gallery-img img"
+								src="img/14.png"
+								alt="Login Page Output"
+							/>
+						</div>
+
+						<p>
+							Users must enter valid credentials to continue.
+						</p>
+
+						<h3>After Successful Login</h3>
+						<p>
+							Once authenticated, the user is redirected to the protected
+							<strong>home page</strong>.
+						</p>
+
+						<div>
+							<img
+								class="gallery-img img"
+								src="img/15.png"
+								alt="Home Page Output"
+							/>
+						</div>
+
+						<h3>Access Control Flow</h3>
+						<p>
+							The authentication flow works as follows:
+						</p>
+
+						<ul>
+							<li>User tries to access protected page</li>
+							<li>Django checks authentication</li>
+							<li>Redirects to login page if not logged in</li>
+							<li>Allows access after successful login</li>
+						</ul>
+
+						<p>
+							This ensures that sensitive pages are accessible only to
+							authorized users.
+						</p>
+					</article>
+				</section>
+
+				<aside>
+					<div class="card">
+						<h3>Contents</h3>
+						<ul class="toc">
+							<li><a href="#login-required">Login Required</a></li>
+						</ul>
+
+						<h4>Steps</h4>
+						<ul>
+							<li>Import decorator</li>
+							<li>Protect view</li>
+							<li>Set login URL</li>
+							<li>Login user</li>
+							<li>Access home page</li>
+						</ul>
+					</div>
+				</aside>
+			</main>
+
+			<!-- 🔍 Lightbox -->
+			<div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+
+			<div id="footer"></div>
+		</div>
+
+		<script src="assests/scripts.js"></script>
+	</body>
+</html>

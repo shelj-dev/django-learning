@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Foxtech | Django Todo App</title>
+		<link rel="stylesheet" href="assests/style.css" />
+	</head>
+
+	<body>
+		<div class="wrap">
+			<header id="header"></header>
+
+			<main>
+				<section>
+					<article class="card">
+						<h2 id="django-todo">Django Todo Application</h2>
+						<p class="meta">
+							Signup, login, logout, create and manage todo items
+						</p>
+
+						<p>
+							This project demonstrates a <strong>basic Todo application</strong>
+							using Django. Each user can create an account, log in, add todo
+							items, view their list, and log out securely.
+						</p>
+
+						<!-- ================= PROJECT SETUP ================= -->
+
+						<h3>Project & App Setup</h3>
+						<p>
+							Create a Django project and a Todo application.
+						</p>
+
+						<pre><code><span class="code-heading">Terminal</span>
+django-admin startproject Todo_project
+cd Todo_project
+python manage.py startapp Todo_app
+</code></pre>
+
+						
+
+						<!-- ================= MODEL ================= -->
+
+						<h3>Todo Model</h3>
+						<p>
+							The Todo model stores tasks created by logged-in users.
+						</p>
+
+						<pre><code><span class="code-heading">Todo_app/models.py</span>
+from django.db import models
+from django.contrib.auth.models import User
+
+class Todo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+</code></pre>
+
+						
+
+						<!-- ================= FORMS ================= -->
+
+						<h3>Forms</h3>
+						<p>
+							Forms are used to handle user signup and todo creation.
+						</p>
+
+						<pre><code><span class="code-heading">Todo_app/forms.py</span>
+from django import forms
+from django.contrib.auth.models import User
+from .models import Todo
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ["username", "password"]
+
+class TodoForm(forms.ModelForm):
+    class Meta:
+        model = Todo
+        fields = ["title"]
+</code></pre>
+
+						<!-- ================= SIGNUP ================= -->
+
+						<h3>User Signup</h3>
+						<p>
+							This view registers a new user and securely stores the password.
+						</p>
+
+						<pre><code><span class="code-heading">views.py</span>
+def signup(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data["password"])
+            user.save()
+            return redirect("login")
+    else:
+        form = UserForm()
+    return render(request, "signup.html", {"form": form})
+</code></pre>
+
+						<h4>Signup Template</h4>
+						<pre><code><span class="code-heading">templates/signup.html</span>
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form.as_p }}
+    &lt;button type="submit"&gt;Sign Up&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+						<div>
+							<img class="gallery-img img" src="img/t1.png" alt="Signup Page Output"/>
+						</div>
+
+						<!-- ================= LOGIN ================= -->
+
+						<h3>User Login</h3>
+						<p>
+							The login view verifies user credentials and starts a session.
+						</p>
+
+						<pre><code><span class="code-heading">views.py</span>
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login
+
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user) 
+            return redirect("home")
+    else:
+        form = AuthenticationForm()
+    return render(request, "login.html", {"form": form})
+</code></pre>
+
+						<h4>Login Template</h4>
+						<pre><code><span class="code-heading">templates/login.html</span>
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form.as_p }}
+    &lt;button type="submit"&gt;Login&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+						<div>
+							<img class="gallery-img img" src="img/t2.png" alt="Login Page Output"/>
+						</div>
+
+						<!-- ================= TODO HOME ================= -->
+
+						<h3>Todo Home Page</h3>
+						<p>
+							After login, users can add and view their todo items. This page
+							is protected with <strong>login_required</strong>.
+						</p>
+
+						<pre><code><span class="code-heading">views.py</span>
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+
+@login_required(login_url='login')
+def home(request):
+    todos = Todo.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            todo = form.save(commit=False)
+            todo.user = request.user
+            todo.save()
+            return redirect("home")
+    else:
+        form = TodoForm()
+
+    return render(request, "home.html", {"form": form, "todos": todos})
+
+@login_required(login_url='login')
+def delete_todo(request, id):
+    todo = get_object_or_404(Todo, id=id, user=request.user)
+    todo.delete()
+    return redirect("home")
+</code></pre>
+
+						<h4>Home Template</h4>
+						<pre><code><span class="code-heading">templates/home.html</span>
+&lt;h2&gt;My Todo List&lt;/h2&gt;
+
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form.as_p }}
+    &lt;button&gt;Add Todo&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;ul&gt;
+{% for todo in todos %}
+    &lt;li&gt;
+        {{ todo.title }}
+        &lt;a href="{% url 'delete' todo.id %}"&gt;Delete&lt;/a&gt;
+    &lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+
+&lt;a href="{% url 'logout' %}"&gt;Logout&lt;/a&gt;
+</code></pre>
+
+						<div>
+							<img class="gallery-img img" src="img/t3.png" alt="Todo Home Output"/>
+						</div>
+
+						<!-- ================= LOGOUT ================= -->
+
+						<h3>User Logout</h3>
+						<p>
+							Logout clears the session and redirects the user to login.
+						</p>
+
+						<pre><code><span class="code-heading">views.py</span>
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+</code></pre>
+
+						
+
+						<!-- ================= URLS ================= -->
+
+						<h3>URL Configuration</h3>
+						<p>
+							All routes for the Todo app are defined in <code>urls.py</code>.
+						</p>
+
+						<pre><code><span class="code-heading">Todo_app/urls.py</span>
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("signup/", views.signup, name="signup"),
+    path("login/", views.login_view, name="login"),
+    path("", views.home, name="home"),
+    path("delete/<int:id>/", views.delete_todo, name="delete"),
+    path("logout/", views.logout_view, name="logout"),
+]
+</code></pre>
+
+						<!-- ================= STRUCTURE ================= -->
+
+						<h3>Project Structure</h3>
+						<p>
+							Final folder structure for the Todo application:
+						</p>
+
+						<pre><code>
+Todo_project/
+├── Todo_app/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── forms.py
+├── templates/
+│   ├── signup.html
+│   ├── login.html
+│   └── home.html
+├── manage.py
+└── Todo_project/
+</code></pre>
+
+						<p>
+							This completes a clean and beginner-friendly Django Todo
+							application with authentication and login protection.
+						</p>
+					</article>
+				</section>
+
+				<aside>
+					<div class="card">
+						<h3>Contents</h3>
+						<ul class="toc">
+							<li><a href="#django-todo">Todo Application</a></li>
+						</ul>
+
+						<h4>Steps</h4>
+						<ul>
+							<li>Create project & app</li>
+							<li>Define todo model</li>
+							<li>Signup & login</li>
+							<li>Add todo items</li>
+							<li>Logout safely</li>
+						</ul>
+					</div>
+				</aside>
+			</main>
+
+			<!-- 🔍 Lightbox -->
+			<div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+
+			<div id="footer"></div>
+		</div>
+
+		<script src="assests/scripts.js"></script>
+	</body>
+</html>

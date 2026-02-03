@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Foxtech | Django Authentication</title>
+		<link rel="stylesheet" href="assests/style.css" />
+	</head>
+
+	<body>
+		<div class="wrap">
+			<header id="header"></header>
+
+			<main>
+				<section>
+					<article class="card">
+						<h2 id="django-auth">Django Authentication</h2>
+						<p class="meta">
+							Signup, login, logout, user session management
+						</p>
+
+						<p>
+							Django comes with a built-in <strong>authentication system</strong>
+							that helps manage users easily. Using this system, users can
+							create accounts, log in, and log out securely.
+						</p>
+
+						<!-- ================= SIGNUP ================= -->
+
+						<h3>User Signup (Create Account)</h3>
+						<p>
+							This view handles user registration. It collects user details,
+							encrypts the password, and saves the user in the database.
+						</p>
+
+						<pre><code><span class="code-heading">views.py</span>
+def create_user(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data["password"])
+            user.save()
+            return redirect("login")
+
+    else:
+        form = UserForm()
+
+    return render(request, "create.html", {"form": form})
+</code></pre>
+
+						<h4>Signup Template</h4>
+						<p>
+							The signup form is displayed using Django’s form system.
+						</p>
+
+						<pre><code><span class="code-heading">templates/create.html</span>
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form.as_p }}
+    &lt;button type="submit"&gt;Sign Up&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+						<div>
+							<img
+								class="gallery-img img"
+								src="img/16.png"
+								alt="Signup Page Output"
+							/>
+						</div>
+
+						<p>
+							After submitting the form, a new user account is created.
+						</p>
+
+						<!-- ================= LOGIN ================= -->
+
+						<h3>User Login</h3>
+						<p>
+							The login view checks the username and password entered by the user.
+							If the details are correct, the user is allowed to access the home
+							page.
+						</p>
+
+						<pre><code><span class="code-heading">views.py</span>
+from django.contrib.auth.forms import AuthenticationForm
+
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+
+        if form.is_valid():
+            return redirect("home")
+
+    else:
+        form = AuthenticationForm()
+
+    return render(request, "login.html", {"form": form})
+</code></pre>
+
+						<h4>Login Template</h4>
+						<p>
+							The login form collects username and password.
+						</p>
+
+						<pre><code><span class="code-heading">templates/login.html</span>
+&lt;form method="post"&gt;
+    {% csrf_token %}
+    {{ form.as_p }}
+    &lt;button type="submit"&gt;Login&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+						<div>
+							<img
+								class="gallery-img img"
+								src="img/14.png"
+								alt="Login Page Output"
+							/>
+						</div>
+
+						<p>
+							Once logged in, Django maintains the user session automatically.
+						</p>
+
+						<!-- ================= LOGOUT ================= -->
+
+						<h3>User Logout</h3>
+						<p>
+							Logout ends the current user session and removes authentication
+							information.
+						</p>
+
+						<pre><code><span class="code-heading">views.py</span>
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+</code></pre>
+
+						<div>
+							<img
+								class="gallery-img img"
+								src="img/17.png"
+								alt="Logout Output"
+							/>
+						</div>
+
+						<p>
+							After logout, the user is redirected back to the login page.
+						</p>
+
+						<!-- ================= HOME ================= -->
+
+						<h3>Home Page</h3>
+						<p>
+							The home page is displayed after a successful login.
+						</p>
+
+						<pre><code><span class="code-heading">templates/home.html</span>
+&lt;h2&gt;Welcome&lt;/h2&gt;
+&lt;p&gt;You are logged in&lt;/p&gt;
+&lt;a href="{% url 'logout' %}"&gt;Logout&lt;/a&gt;
+</code></pre>
+
+						<!-- ================= URLS ================= -->
+
+						<h3>URL Configuration</h3>
+						<p>
+							All authentication-related paths are defined in one place using
+							<code>urls.py</code>.
+						</p>
+
+						<pre><code><span class="code-heading">urls.py</span>
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("signup/", views.create_user, name="signup"),
+    path("login/", views.login_view, name="login"),
+    path("logout/", views.logout_view, name="logout"),
+    path("", views.home, name="home"),
+]
+</code></pre>
+
+						<!-- ================= STRUCTURE ================= -->
+
+						<h3>Project Structure</h3>
+						<p>
+							A simple folder structure for authentication:
+						</p>
+
+						<pre><code>
+myapp/
+├── templates/
+│   ├── create.html
+│   ├── login.html
+│   └── home.html
+├── views.py
+├── urls.py
+├── forms.py
+└── models.py
+</code></pre>
+
+						<p>
+							This setup provides a clear and beginner-friendly authentication
+							system in Django.
+						</p>
+					</article>
+				</section>
+
+				<aside>
+					<div class="card">
+						<h3>Contents</h3>
+						<ul class="toc">
+							<li><a href="#django-auth">Authentication</a></li>
+						</ul>
+
+						<h4>Steps</h4>
+						<ul>
+							<li>Create an account</li>
+							<li>Login with credentials</li>
+							<li>Access home page</li>
+							<li>Logout safely</li>
+							<li>End session</li>
+						</ul>
+					</div>
+				</aside>
+			</main>
+
+			<!-- 🔍 Lightbox -->
+			<div id="lightbox">
+				<span id="close">&times;</span>
+				<img id="lightbox-img" />
+				<div id="prev" class="nav">&#10094;</div>
+				<div id="next" class="nav">&#10095;</div>
+			</div>
+
+			<div id="footer"></div>
+		</div>
+
+		<script src="assests/scripts.js"></script>
+	</body>
+</html>
