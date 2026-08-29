@@ -115,7 +115,7 @@ document.addEventListener("keyup", (e) => {
 // --------------------------------------------------------------
 // Navbar
 const headerData = `<div class="brand">
-					<div class="logo"><img src="assests/logo.ico" alt="Logo" /></div>
+					<div class="logo"><img src="/class/django/pages/assests/logo.ico" alt="Logo" /></div>
 					<div>
 						<h1>Foxtech</h1>
 						<div class="sub"></div>
@@ -124,7 +124,7 @@ const headerData = `<div class="brand">
 
 				<nav aria-label="Main navigation">
 					<ul>
-						<li><a href="/django-learning/index.html">Home</a></li>
+						<li><a href="/class/django/index.html">Home</a></li>
 					</ul>
 				</nav>`;
 const header = document.getElementById("header");
@@ -137,9 +137,7 @@ const footerData = `<footer style="background:#222; color:#fff; padding:15px; te
     <p>&copy; 2026 Foxtech Private Solutions</p>
     <p>
 		<h3 style="display: inline-block">Contributors: </h3>
-        <a href="#" style="color:#ccc; text-decoration:none;">Foxtech.dev.labs</a> |
-        <a href="https://github.com/Ha-ily123" style="color:#ccc; text-decoration:none;">Haily</a> |
-        <a href="https://github.com/Jijitha-2006" style="color:#ccc; text-decoration:none;">Jiitha</a>
+        <a href="#" style="color:#ccc; text-decoration:none;">Foxtech.dev.labs</a>
     </p>
 </footer>
 `;
